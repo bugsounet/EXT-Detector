@@ -4,8 +4,6 @@
   "description": "Simple porcupine detector",
   "main": "MMM-Porcupine.js",
   "scripts": {
-    "preinstall": "installer/preinstall.sh",
-    "postinstall": "installer/postinstall.sh",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "micConfig": "installer/micConfig.sh"
@@ -31,6 +29,6 @@
     "url": "http://forum.bugsounet.fr"
   },
   "dependencies": {
-    "@bugsounet/porcupine": "^1.0.0"
+    "@bugsounet/porcupine": "bugsounet/porcupine"
   }
 }

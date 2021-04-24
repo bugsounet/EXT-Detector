@@ -8,6 +8,7 @@ Module.register("MMM-Porcupine", {
     debug: false,
     autoStart: true,
     micConfig: {
+      recorder: "auto",
       device: "plughw:0"
     },
     detectors: [
