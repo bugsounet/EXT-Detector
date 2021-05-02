@@ -1,6 +1,7 @@
 {
   "name": "MMM-Porcupine",
   "version": "1.0.0",
+  "rev": "020521-1",
   "description": "Simple porcupine detector",
   "main": "MMM-Porcupine.js",
   "scripts": {

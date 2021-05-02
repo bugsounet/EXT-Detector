@@ -11,7 +11,7 @@ let log = function() {
 
 module.exports = NodeHelper.create({
   start: function () {
-    console.log("[PORCUPINE] MMM-Porcupine Version:", require('./package.json').version)
+    console.log("[PORCUPINE] MMM-Porcupine Version:", require('./package.json').version , "rev:", require('./package.json').rev)
     this.config = {}
     this.porcupine = null
     this.porcupineConfig = []
@@ -34,6 +34,7 @@ module.exports = NodeHelper.create({
 
   initialize: async function() {
     var debug = (this.config.debug) ? this.config.debug : false
+    log("Config:", this.config)
     if (!this.config.debug) log = () => { /* do nothing */ }
     this.config.detectors.forEach(detector => {
       const values = {}
@@ -51,25 +52,18 @@ module.exports = NodeHelper.create({
   
   activate: async function() {
     this.porcupine.init()
-    this.startListening()
+    this.porcupine.start()
     this.running = true
+    this.sendSocketNotification("LISTENING")
   },
 
   onDetected: function (detected) {
     this.deactivate()
-    this.sendSocketNotification("DETECTED", detected)
+    this.sendSocketNotification("DETECTED", detected )
   },
 
   deactivate: function() {
-    this.stopListening()
-    this.running = false
-  },
-
-  startListening: function() {
-    this.porcupine.start()
-  },
-
-  stopListening: function () {
     this.porcupine.stop()
+    this.running = false
   }
 })
