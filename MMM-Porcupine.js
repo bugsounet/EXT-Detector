@@ -7,7 +7,7 @@ Module.register("MMM-Porcupine", {
   defaults: {
     debug: false,
     autoStart: true,
-    useLogos: false,
+    useLogos: true,
     micConfig: {
       recorder: "auto",
       device: "plughw:0"
@@ -116,6 +116,9 @@ Module.register("MMM-Porcupine", {
           }
         })
         break
+      case "DISABLED":
+        this.disabled()
+        break
     }
   },
 
@@ -159,6 +162,15 @@ Module.register("MMM-Porcupine", {
         icon.classList.remove("busy")
         icon.classList.remove("flash")
       }
+    })
+  },
+
+  disabled: function() {
+    if (!this.config.useLogos) return
+    this.displayType.forEach(type => {
+      var icon = document.getElementsByClassName(type)[0]
+      icon.classList.add("busy")
+      icon.classList.remove("flash")
     })
   },
 

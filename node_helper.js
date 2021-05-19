@@ -44,13 +44,13 @@ module.exports = NodeHelper.create({
         this.porcupineConfig.push(values)
       }
     })
-    if (this.porcupineConfig.length == 0) return console.log("[PORCUPINE] No Model set!")
-    this.porcupine = new Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected(detect), this.config.debug)
-    console.log("[PORCUPINE] MMM-Porcupine is now initialized!")
+
+    this.porcupine = await new Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected(detect), this.config.debug)
     if (this.config.autoStart) this.activate()
   },
   
   activate: async function() {
+    if (!this.porcupine) return
     this.porcupine.init()
     this.porcupine.start()
     this.running = true
@@ -63,7 +63,9 @@ module.exports = NodeHelper.create({
   },
 
   deactivate: function() {
+    if (!this.porcupine) return
     this.porcupine.stop()
     this.running = false
+    this.sendSocketNotification("DISABLED")
   }
 })
