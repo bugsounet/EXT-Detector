@@ -1,8 +1,7 @@
 /** MMM-Porcupine helper **/
 
 "use strict"
-const Porcupine = require("@bugsounet/porcupine")
-const Snowboy = require("@bugsounet/snowboy").SnowboyV2
+const { getPlatform } = require("./platform.js")
 var NodeHelper = require("node_helper")
 
 let log = function() {
@@ -19,6 +18,12 @@ module.exports = NodeHelper.create({
     this.snowboyConfig = {}
     this.snowboy = null
     this.detector = false
+    this.lib = {}
+    this.PLATFORM_RECORDER = new Map()
+    this.PLATFORM_RECORDER.set("linux", "arecord")
+    this.PLATFORM_RECORDER.set("mac", "sox")
+    this.PLATFORM_RECORDER.set("raspberry-pi", "arecord")
+    this.PLATFORM_RECORDER.set("windows", "sox")
   },
 
   socketNotificationReceived: function (notification, payload) {
@@ -38,8 +43,31 @@ module.exports = NodeHelper.create({
 
   initialize: async function() {
     var debug = (this.config.debug) ? this.config.debug : false
-    log("Config:", this.config)
     if (!this.config.debug) log = () => { /* do nothing */ }
+    log("Config:", this.config)
+
+    /** Load @bugsounet libraries **/
+    let bugsounet = await this.loadBugsounetLibrary()
+    if (bugsounet) {
+      console.error("[DETECTOR] Warning:", bugsounet, "@bugsounet library not loaded !")
+      console.error("[DETECTOR] Try to solve it with `npm run rebuild` in MMM-Detector directory")
+      return
+    }
+    else console.log("[DETECTOR] All needed @bugsounet library loaded !")
+
+    let platform
+    try {
+      platform = getPlatform()
+    } catch (error) {
+      console.error("[DETECTOR] The NodeJS binding does not support this platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
+      return console.error(error)
+    }
+
+    if (this.config.micConfig.recorder == "auto") {
+      let recorderType = this.PLATFORM_RECORDER.get(platform)
+      console.log(`[DETECTOR] Platform: '${platform}'; attempting to use '${recorderType}' to access microphone ...`)
+      this.config.micConfig.recorder= recorderType
+    }
 
     if (this.config.Porcupine.usePorcupine) {
       /* Porcupine init */
@@ -51,34 +79,38 @@ module.exports = NodeHelper.create({
           this.porcupineConfig.push(values)
         }
       })
-      this.porcupine = await new Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected("porcupine", detect), this.config.debug)
+      this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected("Porcupine", detect), this.config.debug)
+      this.porcupine.init()
+      if (this.porcupine.keywordNames.length) console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
     }
 
     if (this.config.Snowboy.useSnowboy) {
+      this.config.micConfig.audioGain = this.config.Snowboy.audioGain
+      this.config.micConfig.applyFrontend = this.config.Snowboy.applyFrontend
       /* Snowboy init */
       this.snowboyConfig = this.config.Snowboy.detectors
       log("Snowboy DetectorConfig:", this.snowboyConfig)
-      this.snowboy = new Snowboy(this.snowboyConfig, this.config.micConfig, detect => this.onDetected("snowboy", detect), this.config.debug)
+      this.snowboy = await new this.lib.Snowboy(this.snowboyConfig, this.config.micConfig, detect => this.onDetected("Snowboy", detect), this.config.debug)
       this.snowboy.init()
-      log("[DETECTOR] Snowboy is initialized with", this.snowboy.modelsNumber(), "Models")
+      if (this.snowboy.modelsNumber()) console.log("[DETECTOR] Snowboy is initialized with", this.snowboy.modelsNumber(), "Models:", this.snowboy.modelsNames())
     }
 
     if (this.config.autoStart) this.activate()
   },
   
   activate: async function() {
-    if (this.porcupine) {
-      this.porcupine.init()
+    if (this.porcupine && this.porcupine.keywordNames.length) {
       this.porcupine.start()
       this.detector = true
     }
-    if (this.snowboy) {
+    if (this.snowboy && this.snowboy.modelsNumber()) {
       this.snowboy.start()
       this.detector = true
     }
     if (this.detector) {
       this.running = true
       this.sendSocketNotification("LISTENING")
+      console.log("[DETECTOR] Starts listening.")
     }
     else console.error("[DETECTOR] No detector initialized!")
   },
@@ -100,6 +132,36 @@ module.exports = NodeHelper.create({
     if (!this.detecor) {
       this.running = false
       this.sendSocketNotification("DISABLED")
+      console.log("[DETECTOR] Stops listening.")
     }
+  },
+
+  /** Load require @busgounet library **/
+  /** It will not crash MM (black screen) **/
+  /** just inform user :) **/
+  loadBugsounetLibrary: function() {
+    let errors = 0
+    return new Promise(resolve => {
+      if (this.config.Porcupine.usePorcupine) {
+        try {
+          this.lib["Porcupine"] = require("@bugsounet/porcupine")
+        } catch (e) {
+          console.error("[DETECTOR] Porcupine library: Loading error!" , e)
+          this.sendSocketNotification("ERROR" , "Porcupine")
+          errors++
+        }
+      }
+      if (this.config.Snowboy.useSnowboy) {
+        try {
+          this.lib["Snowboy"] = require("@bugsounet/snowboy").SnowboyV2
+        } catch (e) {
+          console.error("[DETECTOR] Snowboy library: Loading error!" , e)
+          this.sendSocketNotification("ERROR" , "Snowboy")
+          errors++
+        }
+      }
+      resolve(errors)
+    })
   }
+
 })

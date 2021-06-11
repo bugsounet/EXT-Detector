@@ -18,6 +18,8 @@ Module.register("MMM-Detector", {
     },
     Snowboy: {
       useSnowboy: true,
+      audioGain: 2.0,
+      applyFrontend: true, // When you use only `snowboy` and `smart_mirror`, `false` is better. But with other models, `true` is better.
       detectors: [
         {
           Model: "jarvis",
@@ -157,6 +159,13 @@ Module.register("MMM-Detector", {
         break
       case "DISABLED":
         this.disabled()
+        break
+      case "ERROR":
+        this.sendNotification("SHOW_ALERT", {
+          message: "Error when loading " + payload + " library. Try `npm run rebuild` in MMM-Detector directory",
+          title: "MMM-Detector",
+          timer: 0
+        })
         break
     }
   },
