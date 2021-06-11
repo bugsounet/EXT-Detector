@@ -1,10 +1,10 @@
-#PORCUPINE-WRAPPER {
+#DETECTOR-WRAPPER {
   display: flex;
   margin-left: 10px;
   align-items: center;
 }
 
-#PORCUPINE-WRAPPER.hidden {
+#DETECTOR-WRAPPER.hidden {
   display: none;
 }
 

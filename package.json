@@ -1,9 +1,9 @@
 {
-  "name": "MMM-Porcupine",
+  "name": "MMM-Detector",
   "version": "1.0.0",
-  "rev": "190521-1",
-  "description": "Simple porcupine detector",
-  "main": "MMM-Porcupine.js",
+  "rev": "210611-1",
+  "description": "Snowboy / Porcupine Simple detector",
+  "main": "MMM-Detector.js",
   "scripts": {
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
@@ -14,6 +14,7 @@
     "module",
     "hotword",
     "porcupine",
+    "snowboy",
     "smart mirror",
     "voice",
     "jarvis",
@@ -24,12 +25,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bugsounet/MMM-Porcupine"
+    "url": "https://github.com/bugsounet/MMM-Detector"
   },
   "bugs": {
     "url": "http://forum.bugsounet.fr"
   },
   "dependencies": {
-    "@bugsounet/porcupine": "bugsounet/porcupine"
+    "@bugsounet/porcupine": "bugsounet/porcupine",
+    "@bugsounet/snowboy": "^2.0.5"
   }
 }
