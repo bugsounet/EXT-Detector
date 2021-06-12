@@ -31,7 +31,7 @@
     "url": "http://forum.bugsounet.fr"
   },
   "dependencies": {
-    "@bugsounet/porcupine": "bugsounet/porcupine",
-    "@bugsounet/snowboy": "^2.0.5"
+    "@bugsounet/porcupine": "^1.0.0",
+    "@bugsounet/snowboy": "^2.0.6"
   }
 }
