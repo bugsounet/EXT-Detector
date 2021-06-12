@@ -136,9 +136,9 @@ Module.register("MMM-Detector", {
         break
       case "DETECTED":
         console.log("[DETECTOR] Detected:", payload.key, "From:", payload.from)
-        if (payload.from == "porcupine") {
+        if (payload.from == "Porcupine") {
           this.config.Porcupine.detectors.forEach(detector => {
-            if (detector.Model === payload) {
+            if (detector.Model === payload.key) {
               if (detector.Type) this.refreshLogo(detector.Type, true)
               else this.refreshLogo("default", true)
               this.sendNotification(detector.onDetected.notification, detector.onDetected.parameters)
@@ -146,9 +146,9 @@ Module.register("MMM-Detector", {
             }
           })
         }
-        if (payload.from == "snowboy") {
+        if (payload.from == "Snowboy") {
           this.config.Snowboy.detectors.forEach(detector => {
-            if (detector.Model === payload) {
+            if (detector.Model === payload.key) {
               if (detector.Type) this.refreshLogo(detector.Type, true)
               else this.refreshLogo("default", true)
               this.sendNotification(detector.onDetected.notification, detector.onDetected.parameters)
