@@ -5,9 +5,10 @@
   "description": "Snowboy / Porcupine Simple detector",
   "main": "MMM-Detector.js",
   "scripts": {
+    "preinstall": "installer/preinstall.sh",
+    "postinstall": "installer/postinstall.sh",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
-    "micConfig": "installer/micConfig.sh"
   },
   "keywords": [
     "magic mirror",
