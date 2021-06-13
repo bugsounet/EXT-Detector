@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@bugsounet/porcupine": "^1.0.0",
-    "@bugsounet/snowboy": "^2.0.6"
+    "@bugsounet/snowboy": "^2.0.6",
+    "@bugsounet/npmcheck": "^0.9.95"
   }
 }
