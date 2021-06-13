@@ -27,8 +27,7 @@ Module.register("MMM-Detector", {
           Type: "google",
           autoRestart: false,
           onDetected: {
-            notification: "GA_ACTIVATE",
-            parameters: null
+            notification: "GA_ACTIVATE"
           }
         },
         {
@@ -37,8 +36,7 @@ Module.register("MMM-Detector", {
           Type: "alexa",
           autoRestart: false,
           onDetected: {
-            notification: "ALEXA_ACTIVATE",
-            parameters: null
+            notification: "ALEXA_ACTIVATE"
           }
         }
       ]
@@ -89,7 +87,7 @@ Module.register("MMM-Detector", {
           autoRestart: true,
           onDetected: {
             notification: "SHOW_ALERT",
-            parameters: {
+            params: {
               type: "notification" ,
               message: "Detected: hey siri",
               title: "MMM-Porcupine",
@@ -108,6 +106,7 @@ Module.register("MMM-Detector", {
 
   start: function() {
     this.displayType= []
+    this.listening = false
     this.types= {
       google: this.file("resources/google.png"),
       alexa: this.file("resources/alexa.png"),
@@ -146,7 +145,7 @@ Module.register("MMM-Detector", {
             if (detector.Model === payload.key) {
               if (detector.Type) this.refreshLogo(detector.Type, true)
               else this.refreshLogo("default", true)
-              this.sendNotification(detector.onDetected.notification, detector.onDetected.parameters)
+              this.sendNotification(detector.onDetected.notification, detector.onDetected.params)
               if (detector.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
             }
           })
@@ -156,7 +155,7 @@ Module.register("MMM-Detector", {
             if (detector.Model === payload.key) {
               if (detector.Type) this.refreshLogo(detector.Type, true)
               else this.refreshLogo("default", true)
-              this.sendNotification(detector.onDetected.notification, detector.onDetected.parameters)
+              this.sendNotification(detector.onDetected.notification, detector.onDetected.params)
               if (detector.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
             }
           })
@@ -202,6 +201,12 @@ Module.register("MMM-Detector", {
         icon.className = type
         icon.style.backgroundImage = "url("+this.types[type]+")"
         icon.classList.add("busy")
+        if (this.config.useLogos) {
+          icon.onclick = (event)=> {
+            event.stopPropagation()
+            this.clickCheck(type)
+          }
+        }
         wrapper.appendChild(icon)
       })
     }
@@ -217,6 +222,8 @@ Module.register("MMM-Detector", {
 
   refreshLogo: function(wantedType, discover) {
     if (!this.config.useLogos) return
+    if (discover) this.listening = false
+    else this.listening = true
     this.displayType.forEach(type => {
       var icon = document.getElementsByClassName(type)[0]
       if (discover) {
@@ -235,6 +242,7 @@ Module.register("MMM-Detector", {
 
   disabled: function() {
     if (!this.config.useLogos) return
+    this.listening = false
     this.displayType.forEach(type => {
       var icon = document.getElementsByClassName(type)[0]
       icon.classList.add("busy")
@@ -261,5 +269,31 @@ Module.register("MMM-Detector", {
     }
     let uniqueType = [...new Set(Type)]
     return uniqueType
+  },
+
+  clickCheck: function(type) {
+    if (!type || !this.listening) return
+    let Activate = []
+    if (this.config.Snowboy.useSnowboy) {
+      Activate = this.config.Snowboy.detectors.filter(detector => detector.Type == type)
+      if (Activate.length) {
+        this.clickActivate(Activate[0],type)
+        return console.log("[DETECTOR] ~Touch~ Snowboy found:", Activate[0])
+      }
+    }
+    if (this.config.Porcupine.usePorcupine) {
+      Activate = this.config.Porcupine.detectors.filter(detector => detector.Type == type)
+      if (Activate.length) {
+        this.clickActivate(Activate[0], type)
+        return console.log("[DETECTOR] ~Touch~ Porcupine found:", Activate[0])
+      }
+    }
+  },
+
+  clickActivate: function (params, type) {
+    this.sendSocketNotification('STOP')
+    this.refreshLogo(type, true)
+    this.sendNotification(params.onDetected.notification, params.onDetected.params)
+    if (params.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
   }
 })

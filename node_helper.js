@@ -4,10 +4,7 @@
 const { getPlatform } = require("./platform.js")
 var NodeHelper = require("node_helper")
 
-let log = function() {
-  var context = "[DETECTOR]"
-  return Function.prototype.bind.call(console.log, console, context)
-}()
+let log = (...args) => { console.log("[DETECTOR]", ...args) }
 
 module.exports = NodeHelper.create({
   start: function () {
@@ -89,6 +86,8 @@ module.exports = NodeHelper.create({
           this.porcupineConfig.push(values)
         }
       })
+      log("Porcupine DetectorConfig:", this.config.Porcupine.detectors)
+      this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected("Porcupine", detect), this.config.debug)
       this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected("Porcupine", detect), this.config.debug)
       this.porcupine.init()
       if (this.porcupine.keywordNames.length) console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
@@ -139,7 +138,7 @@ module.exports = NodeHelper.create({
       this.snowboy.stop()
       this.detector= false
     }
-    if (!this.detecor) {
+    if (!this.detector) {
       this.running = false
       this.sendSocketNotification("DISABLED")
       console.log("[DETECTOR] Stops listening.")
