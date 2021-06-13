@@ -85,7 +85,7 @@ module.exports = NodeHelper.create({
         const values = {}
         if (detector.Model) {
           values.Model= detector.Model
-          values.Sensitivity= detector.Sensitivity ? detector.Sensitivity: 0.6
+          values.Sensitivity= detector.Sensitivity ? detector.Sensitivity: 0.7
           this.porcupineConfig.push(values)
         }
       })
