@@ -14,6 +14,8 @@ module.exports = NodeHelper.create({
     this.porcupineConfig = []
     this.snowboyConfig = {}
     this.snowboy = null
+    this.Snowboy = []
+    this.Porcupine = []
     this.detector = false
     this.lib = {}
     this.PLATFORM_RECORDER = new Map()
@@ -21,6 +23,7 @@ module.exports = NodeHelper.create({
     this.PLATFORM_RECORDER.set("mac", "sox")
     this.PLATFORM_RECORDER.set("raspberry-pi", "arecord")
     this.PLATFORM_RECORDER.set("windows", "sox")
+    this.detectorModel = 0
   },
 
   socketNotificationReceived: function (notification, payload) {
@@ -42,6 +45,8 @@ module.exports = NodeHelper.create({
     var debug = (this.config.debug) ? this.config.debug : false
     if (!this.config.debug) log = () => { /* do nothing */ }
     log("Config:", this.config)
+
+    await this.detectorFilter()
 
     /** Load @bugsounet libraries **/
     let bugsounet = await this.loadBugsounetLibrary()
@@ -76,9 +81,9 @@ module.exports = NodeHelper.create({
       this.config.micConfig.recorder= recorderType
     }
 
-    if (this.config.Porcupine.usePorcupine) {
+    if (this.Porcupine.length) {
       /* Porcupine init */
-      this.config.Porcupine.detectors.forEach(detector => {
+      this.Porcupine.forEach(detector => {
         const values = {}
         if (detector.Model) {
           values.Model= detector.Model
@@ -86,22 +91,25 @@ module.exports = NodeHelper.create({
           this.porcupineConfig.push(values)
         }
       })
-      log("Porcupine DetectorConfig:", this.config.Porcupine.detectors)
-      this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected("Porcupine", detect), this.config.debug)
+      log("Porcupine DetectorConfig:", this.porcupineConfig)
       this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected("Porcupine", detect), this.config.debug)
       this.porcupine.init()
-      if (this.porcupine.keywordNames.length) console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
+      if (this.porcupine.keywordNames.length) {
+        console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
+        this.detectorModel += this.porcupine.keywordNames.length
+      }
     }
 
-    if (this.config.Snowboy.useSnowboy) {
-      this.config.micConfig.audioGain = this.config.Snowboy.audioGain
-      this.config.micConfig.applyFrontend = this.config.Snowboy.applyFrontend
+    if (this.Snowboy.length) {
       /* Snowboy init */
-      this.snowboyConfig = this.config.Snowboy.detectors
+      this.snowboyConfig = this.Snowboy
       log("Snowboy DetectorConfig:", this.snowboyConfig)
       this.snowboy = await new this.lib.Snowboy(this.snowboyConfig, this.config.micConfig, detect => this.onDetected("Snowboy", detect), this.config.debug)
       this.snowboy.init()
-      if (this.snowboy.modelsNumber()) console.log("[DETECTOR] Snowboy is initialized with", this.snowboy.modelsNumber(), "Models:", this.snowboy.modelsNames())
+      if (this.snowboy.modelsNumber()) {
+        console.log("[DETECTOR] Snowboy is initialized with", this.snowboy.modelsNumber(), "Models:", this.snowboy.modelsNames())
+        this.detectorModel += this.snowboy.modelsNumber()
+      }
     }
 
     if (this.config.autoStart) this.activate()
@@ -119,9 +127,12 @@ module.exports = NodeHelper.create({
     if (this.detector) {
       this.running = true
       this.sendSocketNotification("LISTENING")
-      console.log("[DETECTOR] Starts listening.")
+      console.log("[DETECTOR] Starts listening.", this.detectorModel, "Models")
     }
-    else console.error("[DETECTOR] No detector initialized!")
+    else {
+      this.sendSocketNotification("NOT_INITIALIZED")
+      console.error("[DETECTOR] No detector initialized!")
+    }
   },
 
   onDetected: function (from, detected) {
@@ -151,18 +162,20 @@ module.exports = NodeHelper.create({
   loadBugsounetLibrary: function() {
     let errors = 0
     return new Promise(resolve => {
-      if (this.config.Porcupine.usePorcupine) {
+      if (this.Porcupine.length) {
         try {
           this.lib["Porcupine"] = require("@bugsounet/porcupine")
+          log("[DETECTOR] Loaded: @bugsounet/porcupine")
         } catch (e) {
           console.error("[DETECTOR] Porcupine library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "Porcupine")
           errors++
         }
       }
-      if (this.config.Snowboy.useSnowboy) {
+      if (this.Snowboy.length) {
         try {
           this.lib["Snowboy"] = require("@bugsounet/snowboy").SnowboyV2
+          log("[DETECTOR] Loaded: @bugsounet/snowboy")
         } catch (e) {
           console.error("[DETECTOR] Snowboy library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "Snowboy")
@@ -172,6 +185,7 @@ module.exports = NodeHelper.create({
       if (this.config.NPMCheck.useChecker) {
         try  {
           this.lib["npmCheck"] = require("@bugsounet/npmcheck")
+          log("[DETECTOR] Loaded: @bugsounet/npmcheck")
         } catch (e) {
           console.error("[DETECTOR] Snowboy library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "npmCheck")
@@ -179,6 +193,14 @@ module.exports = NodeHelper.create({
         }
       }
       resolve(errors)
+    })
+  },
+
+  detectorFilter: function() {
+    return new Promise(resolve => {
+      this.Snowboy= this.config.detectors.filter(detector => detector.detector == "Snowboy")
+      this.Porcupine= this.config.detectors.filter(detector => detector.detector == "Porcupine")
+      resolve()
     })
   }
 

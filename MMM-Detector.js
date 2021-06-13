@@ -11,92 +11,92 @@ Module.register("MMM-Detector", {
     useLogos: true,
     micConfig: {
       recorder: "auto",
-      device: "default"
+      device: "default",
+      // only for snowboy:
+      audioGain: 2.0,
+      applyFrontend: true // When you use only `snowboy` and `smart_mirror`, `false` is better. But with other models, `true` is better.
     },
     types: {
       default: "default.png"
     },
-    Snowboy: {
-      useSnowboy: true,
-      audioGain: 2.0,
-      applyFrontend: true, // When you use only `snowboy` and `smart_mirror`, `false` is better. But with other models, `true` is better.
-      detectors: [
-        {
-          Model: "jarvis",
-          Sensitivity: null,
-          Type: "google",
-          autoRestart: false,
-          onDetected: {
-            notification: "GA_ACTIVATE"
-          }
-        },
-        {
-          Model: "alexa",
-          Sensitivity: null,
-          Type: "alexa",
-          autoRestart: false,
-          onDetected: {
-            notification: "ALEXA_ACTIVATE"
+    detectors: [
+      {
+        detector: "Snowboy",
+        Model: "jarvis",
+        Sensitivity: null,
+        Type: "google",
+        autoRestart: false,
+        onDetected: {
+          notification: "GA_ACTIVATE"
+        }
+      },
+      {
+        detector: "Snowboy",
+        Model: "alexa",
+        Sensitivity: null,
+        Type: "alexa",
+        autoRestart: false,
+        onDetected: {
+          notification: "ALEXA_ACTIVATE"
+        }
+      },
+      {
+        detector: "Porcupine",
+        Model: "ok google",
+        Sensitivity: 0.8,
+        Type: "google",
+        autoRestart: false,
+        onDetected: {
+          notification: "GA_ACTIVATE"
+        }
+      },
+      {
+        detector: "Porcupine",
+        Model: "hey google",
+        Sensitivity: 0.9,
+        Type: "google",
+        autoRestart: false,
+        onDetected: {
+          notification: "GA_ACTIVATE"
+        }
+      },
+      {
+        detector: "Porcupine",
+        Model: "jarvis",
+        Sensitivity: 0.7,
+        Type: "google",
+        autoRestart: false,
+        onDetected: {
+          notification: "GA_ACTIVATE"
+        }
+      },
+      {
+        detector: "Porcupine",
+        Model: "alexa",
+        Sensitivity: 0.8,
+        Type: "alexa",
+        autoRestart: false,
+        onDetected: {
+          notification: "ALEXA_ACTIVATE"
+        }
+      },
+      {
+        detector: "Porcupine",
+        Model: "hey siri",
+        Sensitivity: 0.9,
+        Type: "siri",
+        autoRestart: true,
+        onDetected: {
+          notification: "SHOW_ALERT",
+          params: {
+            type: "notification" ,
+            message: "Detected: hey siri",
+            title: "MMM-Porcupine",
+            timer: 5*1000
           }
         }
-      ]
-    },
-    Porcupine: {
-      usePorcupine: true,
-      detectors: [
-        {
-          Model: "ok google",
-          Sensitivity: 0.8,
-          Type: "google",
-          autoRestart: false,
-          onDetected: {
-            notification: "GA_ACTIVATE"
-          }
-        },
-        {
-          Model: "hey google",
-          Sensitivity: 0.9,
-          Type: "google",
-          autoRestart: false,
-          onDetected: {
-            notification: "GA_ACTIVATE"
-          }
-        },
-        {
-          Model: "jarvis",
-          Sensitivity: 0.7,
-          Type: "google",
-          autoRestart: false,
-          onDetected: {
-            notification: "GA_ACTIVATE"
-          }
-        },
-        {
-          Model: "alexa",
-          Sensitivity: 0.8,
-          Type: "alexa",
-          autoRestart: false,
-          onDetected: {
-            notification: "ALEXA_ACTIVATE"
-          }
-        },
-        {
-          Model: "hey siri",
-          Sensitivity: 0.9,
-          Type: "siri",
-          autoRestart: true,
-          onDetected: {
-            notification: "SHOW_ALERT",
-            params: {
-              type: "notification" ,
-              message: "Detected: hey siri",
-              title: "MMM-Porcupine",
-              timer: 5*1000
-            }
-          }
-        }
-      ]
-    },
+      }
+    ],
     NPMCheck: {
       useChecker: true,
       delay: 10 * 60 * 1000,
@@ -139,25 +139,22 @@ Module.register("MMM-Detector", {
         this.refreshLogo(null, false)
         break
       case "DETECTED":
+        let Detected = []
         console.log("[DETECTOR] Detected:", payload.key, "From:", payload.from)
-        if (payload.from == "Porcupine") {
-          this.config.Porcupine.detectors.forEach(detector => {
-            if (detector.Model === payload.key) {
-              if (detector.Type) this.refreshLogo(detector.Type, true)
-              else this.refreshLogo("default", true)
-              this.sendNotification(detector.onDetected.notification, detector.onDetected.params)
-              if (detector.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
-            }
-          })
-        }
-        if (payload.from == "Snowboy") {
-          this.config.Snowboy.detectors.forEach(detector => {
-            if (detector.Model === payload.key) {
-              if (detector.Type) this.refreshLogo(detector.Type, true)
-              else this.refreshLogo("default", true)
-              this.sendNotification(detector.onDetected.notification, detector.onDetected.params)
-              if (detector.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
-            }
+        // magic filter from detectors config !
+        Detected = this.config.detectors.filter(detector => (
+         detector.detector == payload.from &&
+         detector.Model === payload.key
+        ))
+
+        if (Detected.length) {
+          console.log("[DETECTOR] Send:", Detected[0])
+          this.activateWord(Detected[0])
+        } else { // should never happen ...
+          this.sendNotification("SHOW_ALERT", {
+            message: "Error when Detected: " + payload.key + " From: " + payload.from,
+            title: "MMM-Detector",
+            timer: 5000
           })
         }
         break
@@ -167,6 +164,13 @@ Module.register("MMM-Detector", {
       case "ERROR":
         this.sendNotification("SHOW_ALERT", {
           message: "Error when loading " + payload + " library. Try `npm run rebuild` in MMM-Detector directory",
+          title: "MMM-Detector",
+          timer: 0
+        })
+        break
+      case "NOT_INITIALIZED":
+        this.sendNotification("SHOW_ALERT", {
+          message: "Error: No detectors found, please review your configuration",
           title: "MMM-Detector",
           timer: 0
         })
@@ -255,18 +259,10 @@ Module.register("MMM-Detector", {
   /** return icons to display and remove duplicate **/
   typesList: function() {
     let Type = []
-    if (this.config.Porcupine.usePorcupine) {
-      this.config.Porcupine.detectors.forEach(detector => {
-        if (detector.Type) Type.push(detector.Type)
-        else Type.push("default")
-      })
-    }
-    if (this.config.Snowboy.useSnowboy) {
-      this.config.Snowboy.detectors.forEach(detector => {
-        if (detector.Type) Type.push(detector.Type)
-        else Type.push("default")
-      })
-    }
+    this.config.detectors.forEach(detector => {
+      if (detector.Type) Type.push(detector.Type)
+      else Type.push("default")
+    })
     let uniqueType = [...new Set(Type)]
     return uniqueType
   },
@@ -274,19 +270,10 @@ Module.register("MMM-Detector", {
   clickCheck: function(type) {
     if (!type || !this.listening) return
     let Activate = []
-    if (this.config.Snowboy.useSnowboy) {
-      Activate = this.config.Snowboy.detectors.filter(detector => detector.Type == type)
-      if (Activate.length) {
-        this.clickActivate(Activate[0],type)
-        return console.log("[DETECTOR] ~Touch~ Snowboy found:", Activate[0])
-      }
-    }
-    if (this.config.Porcupine.usePorcupine) {
-      Activate = this.config.Porcupine.detectors.filter(detector => detector.Type == type)
-      if (Activate.length) {
-        this.clickActivate(Activate[0], type)
-        return console.log("[DETECTOR] ~Touch~ Porcupine found:", Activate[0])
-      }
+    Activate = this.config.detectors.filter(detector => detector.Type == type)
+    if (Activate.length) {
+      this.clickActivate(Activate[0],type)
+      return console.log("[DETECTOR] ~Touch~ " + Activate[0].detector + " found:", Activate[0].onDetected)
     }
   },
 
@@ -295,5 +282,21 @@ Module.register("MMM-Detector", {
     this.refreshLogo(type, true)
     this.sendNotification(params.onDetected.notification, params.onDetected.params)
     if (params.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
+  },
+
+  activateWord: function (detector) {
+    if (detector.Type) this.refreshLogo(detector.Type, true)
+    else this.refreshLogo("default", true)
+    if (detector.onDetected && detector.onDetected.notification) {
+      this.sendNotification(detector.onDetected.notification, detector.onDetected.params)
+    } else { // should never happen ...
+      this.sendNotification("SHOW_ALERT", {
+        message: "onDetected Error: No notification to send for " + detector.Model + " (" + detector.detector + ")",
+        title: "MMM-Detector",
+        timer: 5000
+      })
+      return setTimeout(() => { this.sendSocketNotification('START') }, 500)
+    }
+    if (detector.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
   }
 })
