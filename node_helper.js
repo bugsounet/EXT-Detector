@@ -37,7 +37,7 @@ module.exports = NodeHelper.create({
         if (!this.running) this.activate()
         break
       case "STOP":
-        if (this.running) this.deactivate()
+        if (this.running) this.deactivate(payload)
         break
     }
   },
@@ -142,7 +142,7 @@ module.exports = NodeHelper.create({
     this.sendSocketNotification("DETECTED", { from: from, key: detected } )
   },
 
-  deactivate: function() {
+  deactivate: function(withNoti = true) {
     if (this.porcupine) {
       this.porcupine.stop()
       this.detector = false
@@ -153,7 +153,7 @@ module.exports = NodeHelper.create({
     }
     if (!this.detector) {
       this.running = false
-      this.sendSocketNotification("DISABLED")
+      if (withNoti) this.sendSocketNotification("DISABLED")
       console.log("[DETECTOR] Stops listening.")
     }
   },

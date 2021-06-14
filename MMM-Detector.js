@@ -236,14 +236,15 @@ Module.register("MMM-Detector", {
     let Activate = []
     Activate = this.config.detectors.filter(detector => detector.Type == type)
     if (Activate.length) {
-      this.clickActivate(Activate[0],type)
+      this.clickActivate(Activate[0])
       return console.log("[DETECTOR] ~Touch~ " + Activate[0].detector + " found:", Activate[0].onDetected)
     }
   },
 
-  clickActivate: function (params, type) {
-    this.sendSocketNotification('STOP')
-    this.refreshLogo(type, true)
+  clickActivate: function (params) {
+    this.sendSocketNotification('STOP', false) // stop and don't send DISABLED callback
+    this.listening = false
+    this.refreshLogo(params.Type, true)
     this.sendNotification(params.onDetected.notification, params.onDetected.params)
     if (params.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
   },
