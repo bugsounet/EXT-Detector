@@ -43,7 +43,7 @@ Module.register("MMM-Detector", {
       {
         detector: "Porcupine",
         Model: "ok google",
-        Sensitivity: 0.8,
+        Sensitivity: null,
         Type: "google",
         autoRestart: false,
         onDetected: {
@@ -53,47 +53,11 @@ Module.register("MMM-Detector", {
       {
         detector: "Porcupine",
         Model: "hey google",
-        Sensitivity: 0.9,
+        Sensitivity: null,
         Type: "google",
         autoRestart: false,
         onDetected: {
           notification: "GA_ACTIVATE"
-        }
-      },
-      {
-        detector: "Porcupine",
-        Model: "jarvis",
-        Sensitivity: 0.7,
-        Type: "google",
-        autoRestart: false,
-        onDetected: {
-          notification: "GA_ACTIVATE"
-        }
-      },
-      {
-        detector: "Porcupine",
-        Model: "alexa",
-        Sensitivity: 0.8,
-        Type: "alexa",
-        autoRestart: false,
-        onDetected: {
-          notification: "ALEXA_ACTIVATE"
-        }
-      },
-      {
-        detector: "Porcupine",
-        Model: "hey siri",
-        Sensitivity: 0.9,
-        Type: "siri",
-        autoRestart: true,
-        onDetected: {
-          notification: "SHOW_ALERT",
-          params: {
-            type: "notification" ,
-            message: "Detected: hey siri",
-            title: "MMM-Porcupine",
-            timer: 5*1000
-          }
         }
       }
     ],
