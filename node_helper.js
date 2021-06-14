@@ -16,6 +16,7 @@ module.exports = NodeHelper.create({
     this.snowboy = null
     this.Snowboy = []
     this.Porcupine = []
+    this.porcupineCanRestart = false
     this.detector = false
     this.lib = {}
     this.PLATFORM_RECORDER = new Map()
@@ -116,8 +117,9 @@ module.exports = NodeHelper.create({
   },
   
   activate: async function() {
-    if (this.porcupine && this.porcupine.keywordNames.length) {
+    if (this.porcupine && (this.porcupine.keywordNames.length || this.porcupineCanRestart)) {
       this.porcupine.start()
+      this.porcupineCanRestart = true
       this.detector = true
     }
     if (this.snowboy && this.snowboy.modelsNumber()) {
