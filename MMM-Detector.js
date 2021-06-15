@@ -16,7 +16,7 @@ Module.register("MMM-Detector", {
       audioGain: 2.0,
       applyFrontend: true // When you use only `snowboy` and `smart_mirror`, `false` is better. But with other models, `true` is better.
     },
-    types: {
+    newLogos: {
       default: "default.png"
     },
     detectors: [
@@ -24,7 +24,7 @@ Module.register("MMM-Detector", {
         detector: "Snowboy",
         Model: "jarvis",
         Sensitivity: null,
-        Type: "google",
+        Logo: "google",
         autoRestart: false,
         onDetected: {
           notification: "GA_ACTIVATE"
@@ -34,7 +34,7 @@ Module.register("MMM-Detector", {
         detector: "Snowboy",
         Model: "alexa",
         Sensitivity: null,
-        Type: "alexa",
+        Logo: "alexa",
         autoRestart: false,
         onDetected: {
           notification: "ALEXA_ACTIVATE"
@@ -44,7 +44,7 @@ Module.register("MMM-Detector", {
         detector: "Porcupine",
         Model: "ok google",
         Sensitivity: null,
-        Type: "google",
+        Logo: "google",
         autoRestart: false,
         onDetected: {
           notification: "GA_ACTIVATE"
@@ -54,7 +54,7 @@ Module.register("MMM-Detector", {
         detector: "Porcupine",
         Model: "hey google",
         Sensitivity: null,
-        Type: "google",
+        Logo: "google",
         autoRestart: false,
         onDetected: {
           notification: "GA_ACTIVATE"
@@ -69,20 +69,20 @@ Module.register("MMM-Detector", {
   },
 
   start: function() {
-    this.displayType= []
+    this.displayLogo= []
     this.listening = false
-    this.types= {
+    this.logos= {
       google: this.file("resources/google.png"),
       alexa: this.file("resources/alexa.png"),
       siri: this.file("resources/siri.png"),
       default: this.file("resources/default.png")
     }
-    if (Object.keys(this.config.types).length > 0) {
-      for (let [type, logo] of Object.entries(this.config.types)) {
-        this.config.types[type] = this.file("resources/" + logo)
+    if (Object.keys(this.config.newLogos).length > 0) {
+      for (let [name, logo] of Object.entries(this.config.newLogos)) {
+        this.config.newLogos[name] = this.file("resources/" + logo)
       }
     }
-    this.types = configMerge({}, this.types, this.config.types)
+    this.logos = configMerge({}, this.logos, this.config.newLogos)
     this.sendSocketNotification('INIT', this.config)
   },
 
@@ -158,21 +158,21 @@ Module.register("MMM-Detector", {
   },
 
   getDom: function() {
-    this.displayType = this.typesList()
+    this.displayLogo = this.logoList()
     var wrapper = document.createElement('div')
     wrapper.id = "DETECTOR-WRAPPER"
 
     if (this.config.useLogos) {
-      this.displayType.forEach(type => {
+      this.displayLogo.forEach(name => {
         var icon = document.createElement('div')
         icon.id= "ICON"
-        icon.className = type
-        icon.style.backgroundImage = "url("+this.types[type]+")"
+        icon.className = name
+        icon.style.backgroundImage = "url("+this.logos[name]+")"
         icon.classList.add("busy")
         if (this.config.useLogos) {
           icon.onclick = (event)=> {
             event.stopPropagation()
-            this.clickCheck(type)
+            this.clickCheck(name)
           }
         }
         wrapper.appendChild(icon)
@@ -188,20 +188,20 @@ Module.register("MMM-Detector", {
     ]
   },
 
-  refreshLogo: function(wantedType, discover) {
+  refreshLogo: function(wantedLogo, disabled) {
     if (!this.config.useLogos) return
-    if (discover) this.listening = false
+    if (disabled) this.listening = false
     else this.listening = true
-    this.displayType.forEach(type => {
-      var icon = document.getElementsByClassName(type)[0]
-      if (discover) {
-        if (type != wantedType) icon.classList.add("busy")
+    this.displayLogo.forEach(name => {
+      var icon = document.getElementsByClassName(name)[0]
+      if (disabled) {
+        if (name != wantedLogo) icon.classList.add("busy")
         else {
           icon.classList.remove("busy")
           icon.classList.add("flash")
         }
       }
-      if (!discover) {
+      if (!disabled) {
         icon.classList.remove("busy")
         icon.classList.remove("flash")
       }
@@ -211,8 +211,8 @@ Module.register("MMM-Detector", {
   disabled: function() {
     if (!this.config.useLogos) return
     this.listening = false
-    this.displayType.forEach(type => {
-      var icon = document.getElementsByClassName(type)[0]
+    this.displayLogo.forEach(name => {
+      var icon = document.getElementsByClassName(name)[0]
       icon.classList.add("busy")
       icon.classList.remove("flash")
     })
@@ -221,20 +221,20 @@ Module.register("MMM-Detector", {
   /** Tools **/
 
   /** return icons to display and remove duplicate **/
-  typesList: function() {
-    let Type = []
+  logoList: function() {
+    let Logo = []
     this.config.detectors.forEach(detector => {
-      if (detector.Type) Type.push(detector.Type)
-      else Type.push("default")
+      if (detector.Logo) Logo.push(detector.Logo)
+      else Logo.push("default")
     })
-    let uniqueType = [...new Set(Type)]
-    return uniqueType
+    let uniqueLogo = [...new Set(Logo)]
+    return uniqueLogo
   },
 
-  clickCheck: function(type) {
-    if (!type || !this.listening) return
+  clickCheck: function(Logo) {
+    if (!Logo || !this.listening) return
     let Activate = []
-    Activate = this.config.detectors.filter(detector => detector.Type == type)
+    Activate = this.config.detectors.filter(detector => detector.Logo == Logo)
     if (Activate.length) {
       this.clickActivate(Activate[0])
       return console.log("[DETECTOR] ~Touch~ " + Activate[0].detector + " found:", Activate[0].onDetected)
@@ -244,13 +244,13 @@ Module.register("MMM-Detector", {
   clickActivate: function (params) {
     this.sendSocketNotification('STOP', false) // stop and don't send DISABLED callback
     this.listening = false
-    this.refreshLogo(params.Type, true)
+    this.refreshLogo(params.Logo, true)
     this.sendNotification(params.onDetected.notification, params.onDetected.params)
     if (params.autoRestart) setTimeout(() => { this.sendSocketNotification('START') }, 500)
   },
 
   activateWord: function (detector) {
-    if (detector.Type) this.refreshLogo(detector.Type, true)
+    if (detector.Logo) this.refreshLogo(detector.Logo, true)
     else this.refreshLogo("default", true)
     if (detector.onDetected && detector.onDetected.notification) {
       this.sendNotification(detector.onDetected.notification, detector.onDetected.params)
