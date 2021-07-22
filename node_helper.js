@@ -176,7 +176,7 @@ module.exports = NodeHelper.create({
       }
       if (this.Snowboy.length) {
         try {
-          this.lib["Snowboy"] = require("@bugsounet/snowboy").SnowboyV2
+          this.lib["Snowboy"] = require("@bugsounet/snowboy").Snowboy
           log("[DETECTOR] Loaded: @bugsounet/snowboy")
         } catch (e) {
           console.error("[DETECTOR] Snowboy library: Loading error!" , e)
