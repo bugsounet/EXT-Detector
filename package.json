@@ -1,6 +1,6 @@
 {
   "name": "MMM-Detector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "rev": "210615-1",
   "description": "Snowboy / Porcupine Simple detector",
   "main": "MMM-Detector.js",
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@bugsounet/porcupine": "^1.0.0",
-    "@bugsounet/snowboy": "^2.0.6",
+    "@bugsounet/snowboy": "^2.1.0",
     "@bugsounet/npmcheck": "^0.9.95"
   }
 }
