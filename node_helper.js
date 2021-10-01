@@ -68,19 +68,21 @@ module.exports = NodeHelper.create({
       this.Checker= new this.lib.npmCheck(cfg, update => this.sendSocketNotification("NPM_UPDATE", update))
     }
 
+    /** autodetect platform / recorder **/
+    /** Warn: Mac / windows not yet supported by detector **/
     let platform
     try {
       platform = getPlatform()
     } catch (error) {
       console.error("[DETECTOR] The NodeJS binding does not support this platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
-      return console.error(error)
+      process.exit(1)
+      return
     }
 
-    if (this.config.micConfig.recorder == "auto") {
-      let recorderType = this.PLATFORM_RECORDER.get(platform)
-      console.log(`[DETECTOR] Platform: '${platform}'; attempting to use '${recorderType}' to access microphone ...`)
-      this.config.micConfig.recorder= recorderType
-    }
+    let recorderType = this.PLATFORM_RECORDER.get(platform)
+    console.log(`[DETECTOR] Platform: '${platform}'; attempting to use '${recorderType}' to access microphone ...`)
+    this.config.mic.recorder= recorderType
+    this.config.snowboyMicConfig.recorder= recorderType
 
     if (this.Porcupine.length) {
       /* Porcupine init */
@@ -93,7 +95,7 @@ module.exports = NodeHelper.create({
         }
       })
       log("Porcupine DetectorConfig:", this.porcupineConfig)
-      this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.micConfig, detect => this.onDetected("Porcupine", detect), this.config.debug)
+      this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.mic, detect => this.onDetected("Porcupine", detect), this.config.debug)
       this.porcupine.init()
       if (this.porcupine.keywordNames.length) {
         console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
@@ -105,7 +107,7 @@ module.exports = NodeHelper.create({
       /* Snowboy init */
       this.snowboyConfig = this.Snowboy
       log("Snowboy DetectorConfig:", this.snowboyConfig)
-      this.snowboy = await new this.lib.Snowboy(this.snowboyConfig, this.config.micConfig, detect => this.onDetected("Snowboy", detect), this.config.debug)
+      this.snowboy = await new this.lib.Snowboy(this.snowboyConfig, this.config.snowboyMicConfig, detect => this.onDetected("Snowboy", detect), this.config.debug)
       this.snowboy.init()
       if (this.snowboy.modelsNumber()) {
         console.log("[DETECTOR] Snowboy is initialized with", this.snowboy.modelsNumber(), "Models:", this.snowboy.modelsNames())

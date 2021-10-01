@@ -9,10 +9,7 @@ Module.register("MMM-Detector", {
     debug: false,
     autoStart: true,
     useLogos: true,
-    micConfig: {
-      recorder: "auto",
-      device: "default",
-      // only for snowboy:
+    snowboyMicConfig: {
       audioGain: 2.0,
       applyFrontend: true // When you use only `snowboy` and `smart_mirror`, `false` is better. But with other models, `true` is better.
     },
@@ -83,6 +80,12 @@ Module.register("MMM-Detector", {
       }
     }
     this.logos = configMerge({}, this.logos, this.config.newLogos)
+    this.micConfig= {
+      recorder: "auto",
+      device: "default"
+    }
+    this.config.mic= this.micConfig
+    this.config.snowboyMicConfig= configMerge({}, this.config.mic, this.config.snowboyMicConfig)
     this.sendSocketNotification('INIT', this.config)
   },
 
