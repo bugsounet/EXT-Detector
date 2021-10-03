@@ -47,9 +47,9 @@ fi
 
 Installer_info "NPM Version testing:"
  if [ "$(printf '%s\n' "$MinRequireNpmVer" "$CurrentNpmVer" | sort -V | head -n1)" = "$MinRequireNpmVer" ]; then 
-        Installer_warning "Require: >= ${MinRequireNpmVer} < ${MaxRequireNpmVer}"
+        Installer_info "Require: >= ${MinRequireNpmVer} < ${MaxRequireNpmVer}"
         if [[ "$(printf '%s\n' "$MaxRequireNpmVer" "$CurrentNpmVer" | sort -V | head -n1)" < "$MaxRequireNpmVer" ]]; then
-          Installer_sucess "Current: ${CurrentNpmVer} ✓"
+          Installer_success "Current: ${CurrentNpmVer} ✓"
         else
           Installer_error "Current: ${CurrentNpmVer} 𐄂"
           Installer_error "Failed: incorrect version!"
@@ -57,7 +57,7 @@ Installer_info "NPM Version testing:"
           exit 255
         fi
  else
-        Installer_warning "Require: ${RequireNpmVer}"
+        Installer_info "Require: ${RequireNpmVer}"
         Installer_error "Current: ${CurrentNpmVer} 𐄂"
         Installer_error "Failed: incorrect version!"
         exit 255
@@ -65,8 +65,8 @@ Installer_info "NPM Version testing:"
 echo
 Installer_info "NODE Version testing:"
  if [ "$(printf '%s\n' "$RequireNodeVer" "$CurrentNodeVer" | sort -V | head -n1)" = "$RequireNodeVer" ]; then 
-        Installer_warning "Require: ${RequireNodeVer}"
-        Installer_sucess "Current: ${CurrentNodeVer} ✓"
+        Installer_info "Require: ${RequireNodeVer}"
+        Installer_success "Current: ${CurrentNodeVer} ✓"
  else
         Installer_warning "Require: ${RequireNodeVer}"
         Installer_error "Current: ${CurrentNodeVer} 𐄂"
