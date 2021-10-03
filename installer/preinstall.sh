@@ -65,10 +65,10 @@ Installer_info "NPM Version testing:"
 echo
 Installer_info "NODE Version testing:"
  if [ "$(printf '%s\n' "$RequireNodeVer" "$CurrentNodeVer" | sort -V | head -n1)" = "$RequireNodeVer" ]; then 
-        Installer_warning "Require: ${RequireNodeVer}"
+        Installer_warning "Require: >= ${RequireNodeVer}"
         Installer_success "Current: ${CurrentNodeVer} ✓"
  else
-        Installer_warning "Require: ${RequireNodeVer}"
+        Installer_warning "Require: >= ${RequireNodeVer}"
         Installer_error "Current: ${CurrentNodeVer} 𐄂"
         Installer_error "Failed: incorrect version!"
         exit 255
