@@ -57,7 +57,7 @@ Installer_info "NPM Version testing:"
           exit 255
         fi
  else
-        Installer_warning "Require: ${RequireNpmVer}"
+        Installer_warning "Require: >= ${MinRequireNpmVer} < ${MaxRequireNpmVer}"
         Installer_error "Current: ${CurrentNpmVer} 𐄂"
         Installer_error "Failed: incorrect version!"
         exit 255
