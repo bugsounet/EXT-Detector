@@ -72,6 +72,8 @@ Module.register("MMM-Detector", {
       google: this.file("resources/google.png"),
       alexa: this.file("resources/alexa.png"),
       siri: this.file("resources/siri.png"),
+      snowboy: this.file("resources/snowboy.png"),
+      listen: this.file("resources/listen.png"),
       default: this.file("resources/default.png")
     }
     if (Object.keys(this.config.newLogos).length > 0) {
