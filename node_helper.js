@@ -191,7 +191,7 @@ module.exports = NodeHelper.create({
           this.lib["npmCheck"] = require("@bugsounet/npmcheck")
           log("[DETECTOR] Loaded: @bugsounet/npmcheck")
         } catch (e) {
-          console.error("[DETECTOR] Snowboy library: Loading error!" , e)
+          console.error("[DETECTOR] npmCheck library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "npmCheck")
           errors++
         }

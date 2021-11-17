@@ -1,6 +1,6 @@
 {
   "name": "MMM-Detector",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "rev": "211101-1",
   "description": "Snowboy / Porcupine Simple detector",
   "main": "MMM-Detector.js",
