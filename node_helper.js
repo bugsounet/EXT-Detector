@@ -1,4 +1,4 @@
-/** MMM-Porcupine helper **/
+/** MMM-Detector helper **/
 
 "use strict"
 const { getPlatform } = require("./platform.js")
@@ -46,6 +46,10 @@ module.exports = NodeHelper.create({
     var debug = (this.config.debug) ? this.config.debug : false
     if (!this.config.debug) log = () => { /* do nothing */ }
     log("Config:", this.config)
+    if (this.config.touchOnly) {
+      console.log("[DETECTOR] Started with Touch Screen Feature only")
+      return this.sendSocketNotification("LISTENING")
+    }
 
     await this.detectorFilter()
 
@@ -119,6 +123,7 @@ module.exports = NodeHelper.create({
   },
   
   activate: async function() {
+    if (this.config.touchOnly) return this.sendSocketNotification("LISTENING")
     if (this.porcupine && (this.porcupine.keywordNames.length || this.porcupineCanRestart)) {
       this.porcupine.start()
       this.porcupineCanRestart = true
@@ -145,6 +150,7 @@ module.exports = NodeHelper.create({
   },
 
   deactivate: function(withNoti = true) {
+    if (this.config.touchOnly) return
     if (this.porcupine) {
       this.porcupine.stop()
       this.detector = false
@@ -169,7 +175,7 @@ module.exports = NodeHelper.create({
       if (this.Porcupine.length) {
         try {
           this.lib["Porcupine"] = require("@bugsounet/porcupine")
-          log("[DETECTOR] Loaded: @bugsounet/porcupine")
+          log("Loaded: @bugsounet/porcupine")
         } catch (e) {
           console.error("[DETECTOR] Porcupine library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "Porcupine")
@@ -179,7 +185,7 @@ module.exports = NodeHelper.create({
       if (this.Snowboy.length) {
         try {
           this.lib["Snowboy"] = require("@bugsounet/snowboy").Snowboy
-          log("[DETECTOR] Loaded: @bugsounet/snowboy")
+          log("Loaded: @bugsounet/snowboy")
         } catch (e) {
           console.error("[DETECTOR] Snowboy library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "Snowboy")
@@ -189,7 +195,7 @@ module.exports = NodeHelper.create({
       if (this.config.NPMCheck.useChecker) {
         try  {
           this.lib["npmCheck"] = require("@bugsounet/npmcheck")
-          log("[DETECTOR] Loaded: @bugsounet/npmcheck")
+          log("Loaded: @bugsounet/npmcheck")
         } catch (e) {
           console.error("[DETECTOR] npmCheck library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "npmCheck")
