@@ -20,11 +20,6 @@ Installer_dir="$(Installer_get_current_dir)"
 cd "$Installer_dir"
 
 source utils.sh
-CurrentNpmVer="$(npm -v)"
-MinRequireNpmVer="6.14.15"
-MaxRequireNpmVer="7.0.0"
-CurrentNodeVer="$(node -v)"
-RequireNodeVer="v12.0.0"
 
 # module name
 Installer_module="MMM-Detector"
@@ -45,36 +40,5 @@ if [ "$EUID" -eq 0 ]; then
   exit 1
 fi
 
-Installer_info "NPM Version testing:"
- if [ "$(printf '%s\n' "$MinRequireNpmVer" "$CurrentNpmVer" | sort -V | head -n1)" = "$MinRequireNpmVer" ]; then 
-        Installer_warning "Require: >= ${MinRequireNpmVer} < ${MaxRequireNpmVer}"
-        if [[ "$(printf '%s\n' "$MaxRequireNpmVer" "$CurrentNpmVer" | sort -V | head -n1)" < "$MaxRequireNpmVer" ]]; then
-          Installer_success "Current: ${CurrentNpmVer} ✓"
-        else
-          Installer_error "Current: ${CurrentNpmVer} 𐄂"
-          Installer_error "Failed: incorrect version!"
-          echo
-          exit 255
-        fi
- else
-        Installer_warning "Require: >= ${MinRequireNpmVer} < ${MaxRequireNpmVer}"
-        Installer_error "Current: ${CurrentNpmVer} 𐄂"
-        Installer_error "Failed: incorrect version!"
-        exit 255
- fi
 echo
-Installer_info "NODE Version testing:"
- if [ "$(printf '%s\n' "$RequireNodeVer" "$CurrentNodeVer" | sort -V | head -n1)" = "$RequireNodeVer" ]; then 
-        Installer_warning "Require: >= ${RequireNodeVer}"
-        Installer_success "Current: ${CurrentNodeVer} ✓"
- else
-        Installer_warning "Require: >= ${RequireNodeVer}"
-        Installer_error "Current: ${CurrentNodeVer} 𐄂"
-        Installer_error "Failed: incorrect version!"
-        exit 255
- fi
-echo
-Installer_success "Passed: perfect!"
-echo
-
 Installer_info "Installing all npm libraries..."
