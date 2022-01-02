@@ -1,7 +1,7 @@
 {
   "name": "MMM-Detector",
-  "version": "1.1.4",
-  "rev": "211117-1",
+  "version": "1.1.6",
+  "rev": "220102-1",
   "description": "Snowboy / Porcupine Simple detector",
   "main": "MMM-Detector.js",
   "scripts": {
@@ -32,8 +32,9 @@
     "url": "http://forum.bugsounet.fr"
   },
   "dependencies": {
+    "@bugsounet/npmcheck": "^0.9.96",
     "@bugsounet/porcupine": "^1.0.1",
-    "@bugsounet/snowboy": "^2.2.0",
-    "@bugsounet/npmcheck": "^0.9.96"
+    "@bugsounet/snowboy": "^2.2.3",
+    "magicmirror-rebuild": "^1.0.3"
   }
 }

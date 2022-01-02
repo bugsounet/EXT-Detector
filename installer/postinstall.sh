@@ -26,6 +26,11 @@ Installer_module="MMM-Detector"
 
 echo
 
+Installer_info "MagicMirror Rebuild..."
+cd ..
+./node_modules/.bin/MagicMirror-rebuild
+echo
+
 # the end...
 Installer_warning "Support is now moved in a dedicated Server: http://forum.bugsounet.fr"
 Installer_warning "@bugsounet"

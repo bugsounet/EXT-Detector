@@ -20,11 +20,6 @@ Installer_dir="$(Installer_get_current_dir)"
 cd "$Installer_dir"
 
 source utils.sh
-CurrentNpmVer="$(npm -v)"
-MinRequireNpmVer="6.14.15"
-MaxRequireNpmVer="7.0.0"
-CurrentNodeVer="$(node -v)"
-RequireNodeVer="v12.0.0"
 
 # module name
 Installer_module="MMM-Detector"
@@ -42,39 +37,29 @@ rm -f ../package-lock.json
 # Check not run as root
 if [ "$EUID" -eq 0 ]; then
   Installer_error "npm install must not be used as root"
-  exit 1
+  exit 255
 fi
 
-Installer_info "NPM Version testing:"
- if [ "$(printf '%s\n' "$MinRequireNpmVer" "$CurrentNpmVer" | sort -V | head -n1)" = "$MinRequireNpmVer" ]; then 
-        Installer_warning "Require: >= ${MinRequireNpmVer} < ${MaxRequireNpmVer}"
-        if [[ "$(printf '%s\n' "$MaxRequireNpmVer" "$CurrentNpmVer" | sort -V | head -n1)" < "$MaxRequireNpmVer" ]]; then
-          Installer_success "Current: ${CurrentNpmVer} ✓"
-        else
-          Installer_error "Current: ${CurrentNpmVer} 𐄂"
-          Installer_error "Failed: incorrect version!"
-          echo
-          exit 255
-        fi
- else
-        Installer_warning "Require: >= ${MinRequireNpmVer} < ${MaxRequireNpmVer}"
-        Installer_error "Current: ${CurrentNpmVer} 𐄂"
-        Installer_error "Failed: incorrect version!"
-        exit 255
- fi
-echo
-Installer_info "NODE Version testing:"
- if [ "$(printf '%s\n' "$RequireNodeVer" "$CurrentNodeVer" | sort -V | head -n1)" = "$RequireNodeVer" ]; then 
-        Installer_warning "Require: >= ${RequireNodeVer}"
-        Installer_success "Current: ${CurrentNodeVer} ✓"
- else
-        Installer_warning "Require: >= ${RequireNodeVer}"
-        Installer_error "Current: ${CurrentNodeVer} 𐄂"
-        Installer_error "Failed: incorrect version!"
-        exit 255
- fi
-echo
-Installer_success "Passed: perfect!"
+# Check platform compatibility
+Installer_info "Checking OS..."
+Installer_checkOS
+if  [ "$platform" == "osx" ]; then
+  Installer_error "OS Detected: $OSTYPE ($os_name $os_version $arch)"
+  Installer_error "You need to do Manual Install"
+  exit 0
+else
+  Installer_success "OS Detected: $OSTYPE ($os_name $os_version $arch)"
+fi
+
 echo
 
+# check dependencies
+dependencies=(libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential)
+Installer_info "Checking all dependencies..."
+Installer_check_dependencies
+Installer_success "All Dependencies needed are installed !"
+
+cd ..
+
+echo
 Installer_info "Installing all npm libraries..."
