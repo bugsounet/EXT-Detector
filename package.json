@@ -35,6 +35,6 @@
     "@bugsounet/npmcheck": "^0.9.96",
     "@bugsounet/porcupine": "^1.0.1",
     "@bugsounet/snowboy": "^2.2.3",
-    "magicmirror-rebuild": "^1.0.3"
+    "magicmirror-rebuild": "^1.0.5"
   }
 }
