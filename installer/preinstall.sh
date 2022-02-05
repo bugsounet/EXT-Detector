@@ -53,11 +53,33 @@ fi
 
 echo
 
-# check dependencies
-dependencies=(libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential)
-Installer_info "Checking all dependencies..."
-Installer_check_dependencies
-Installer_success "All Dependencies needed are installed !"
+# Required packages on Debian based systems
+deb_dependencies=(libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential)
+# Required packages on RPM based systems
+rpm_dependencies=(blas-devel file-libs sox sox-devel wget autoconf automake binutils bison flex gcc gcc-c++ glibc-devel libtool make pkgconf strace byacc ccache cscope ctags elfutils indent ltrace perf valgrind)
+# Check dependencies
+if [ "${debian}" ]
+then
+  dependencies=( "${deb_dependencies[@]}" )
+else
+  if [ "${have_dnf}" ]
+  then
+    dependencies=( "${rpm_dependencies[@]}" )
+  else
+    if [ "${have_yum}" ]
+    then
+      dependencies=( "${rpm_dependencies[@]}" )
+    else
+      dependencies=( "${deb_dependencies[@]}" )
+    fi
+  fi
+fi
+
+[ "${__NO_DEP_CHECK__}" ] || {
+  Installer_info "Checking all dependencies..."
+  Installer_check_dependencies
+  Installer_success "All Dependencies needed are installed !"
+}
 
 cd ..
 

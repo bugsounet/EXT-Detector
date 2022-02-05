@@ -26,7 +26,26 @@ Installer_warning "This script will erase current build and reinstall it"
 Installer_error "Use this script only for the new version of Magic Mirror or developer request"
 Installer_yesno "Do you want to continue ?" || exit 0
 
-cd ~/MagicMirror/modules/MMM-Detector
+MMHOME="${HOME}/MagicMirror"
+[ -d ${MMHOME}/modules/MMM-Detector ] || {
+  MMHOME=
+  for homedir in /usr/local /home/*
+  do
+    [ "${homedir}" == "/home/*" ] && continue
+    [ -d ${homedir}/MagicMirror/modules/MMM-Detector ] && {
+      MMHOME="${homedir}/MagicMirror"
+      break
+    }
+  done
+}
+
+if [ "${MMHOME}" ]
+then
+  cd ${MMHOME}/modules/MMM-Detector
+else
+  cd ~/MagicMirror/modules/MMM-Detector
+fi
+
 echo
 Installer_info "Deleting: package-lock.json node_modules" 
 rm -rf package.json package-lock.json node_modules
