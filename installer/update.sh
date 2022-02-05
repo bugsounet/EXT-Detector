@@ -23,7 +23,26 @@ source utils.sh
 Installer_info "Welcome to MMM-Detector updater !"
 echo
 
-cd ~/MagicMirror/modules/MMM-Detector
+MMHOME="${HOME}/MagicMirror"
+[ -d ${MMHOME}/modules/MMM-Detector ] || {
+  MMHOME=
+  for homedir in /usr/local /home/*
+  do
+    [ "${homedir}" == "/home/*" ] && continue
+    [ -d ${homedir}/MagicMirror/modules/MMM-Detector ] && {
+      MMHOME="${homedir}/MagicMirror"
+      break
+    }
+  done
+}
+
+if [ "${MMHOME}" ]
+then
+  cd ${MMHOME}/modules/MMM-Detector
+else
+  cd ~/MagicMirror/modules/MMM-Detector
+fi
+
 # deleting package.json because npm install add/update package
 rm -f package.json package-lock.json
 
@@ -33,12 +52,22 @@ git reset --hard HEAD
 git pull
 #fresh package.json
 git checkout package.json
-cd ~/MagicMirror/modules/MMM-Detector/node_modules
+if [ "${MMHOME}" ]
+then
+  cd ${MMHOME}/modules/MMM-Detector/node_modules
+else
+  cd ~/MagicMirror/modules/MMM-Detector/node_modules
+fi
 
 Installer_info "Deleting ALL @bugsounet libraries..."
 
 rm -rf @bugsounet
-cd ~/MagicMirror/modules/MMM-Detector
+if [ "${MMHOME}" ]
+then
+  cd ${MMHOME}/modules/MMM-Detector
+else
+  cd ~/MagicMirror/modules/MMM-Detector
+fi
 
 Installer_info "Ready for Installing..."
 
