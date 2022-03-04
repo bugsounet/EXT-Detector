@@ -29,16 +29,6 @@ Module.register("MMM-Detector", {
         }
       },
       {
-        detector: "Snowboy",
-        Model: "alexa",
-        Sensitivity: null,
-        Logo: "alexa",
-        autoRestart: false,
-        onDetected: {
-          notification: "ALEXA_ACTIVATE"
-        }
-      },
-      {
         detector: "Porcupine",
         Model: "ok google",
         Sensitivity: null,
@@ -58,12 +48,7 @@ Module.register("MMM-Detector", {
           notification: "GA_ACTIVATE"
         }
       }
-    ],
-    NPMCheck: {
-      useChecker: true,
-      delay: 10 * 60 * 1000,
-      useAlert: true
-    }
+    ]
   },
 
   start: function() {
@@ -71,7 +56,6 @@ Module.register("MMM-Detector", {
     this.listening = false
     this.logos= {
       google: this.file("resources/google.png"),
-      alexa: this.file("resources/alexa.png"),
       siri: this.file("resources/siri.png"),
       snowboy: this.file("resources/snowboy.png"),
       listen: this.file("resources/listen.png"),

@@ -62,16 +62,6 @@ module.exports = NodeHelper.create({
     }
     else console.log("[DETECTOR] All needed @bugsounet library loaded !")
 
-    if (this.config.NPMCheck.useChecker && this.lib.npmCheck) {
-      var cfg = {
-        dirName: __dirname,
-        moduleName: this.name,
-        timer: this.config.NPMCheck.delay,
-        debug: this.config.debug
-      }
-      this.Checker= new this.lib.npmCheck(cfg, update => this.sendSocketNotification("NPM_UPDATE", update))
-    }
-
     /** autodetect platform / recorder **/
     /** Warn: Mac / windows not yet supported by detector **/
     let platform
@@ -189,16 +179,6 @@ module.exports = NodeHelper.create({
         } catch (e) {
           console.error("[DETECTOR] Snowboy library: Loading error!" , e)
           this.sendSocketNotification("ERROR" , "Snowboy")
-          errors++
-        }
-      }
-      if (this.config.NPMCheck.useChecker) {
-        try  {
-          this.lib["npmCheck"] = require("@bugsounet/npmcheck")
-          log("Loaded: @bugsounet/npmcheck")
-        } catch (e) {
-          console.error("[DETECTOR] npmCheck library: Loading error!" , e)
-          this.sendSocketNotification("ERROR" , "npmCheck")
           errors++
         }
       }
