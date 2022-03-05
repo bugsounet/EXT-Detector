@@ -1,6 +1,6 @@
 # EXT-Detector
 
-Keywors Detectors for MMM-GoogleAssistant !
+Keywords Detectors for MMM-GoogleAssistant !
 
 Multi-keyword listener with
 * Snowboy Features
