@@ -22,8 +22,8 @@ cd "$Installer_dir"
 source utils.sh
 
 Installer_info "Welcome to EXT-Detector rebuild script"
-Installer_warning "This script will erase current build and reinstall it"
-Installer_error "Use this script only for the new version of Magic Mirror or developer request"
+Installer_warning "This script will erase current build of EXT-Detector and reinstall it"
+Installer_error "Use this script only for the new version of Magic Mirror"
 Installer_yesno "Do you want to continue ?" || exit 0
 
 MMHOME="${HOME}/MagicMirror"
