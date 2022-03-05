@@ -1,5 +1,7 @@
 # EXT-Detector
 
+## Plugin for `MMM-GoogleAssistant` v4.x
+
 Keywords Detectors for MMM-GoogleAssistant !
 
 Multi-keyword listener with
