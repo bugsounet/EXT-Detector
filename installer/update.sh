@@ -20,16 +20,16 @@ Installer_dir="$(Installer_get_current_dir)"
 cd "$Installer_dir"
 source utils.sh
 
-Installer_info "Welcome to MMM-Detector updater !"
+Installer_info "Welcome to EXT-Detector updater !"
 echo
 
 MMHOME="${HOME}/MagicMirror"
-[ -d ${MMHOME}/modules/MMM-Detector ] || {
+[ -d ${MMHOME}/modules/EXT-Detector ] || {
   MMHOME=
   for homedir in /usr/local /home/*
   do
     [ "${homedir}" == "/home/*" ] && continue
-    [ -d ${homedir}/MagicMirror/modules/MMM-Detector ] && {
+    [ -d ${homedir}/MagicMirror/modules/EXT-Detector ] && {
       MMHOME="${homedir}/MagicMirror"
       break
     }
@@ -38,9 +38,9 @@ MMHOME="${HOME}/MagicMirror"
 
 if [ "${MMHOME}" ]
 then
-  cd ${MMHOME}/modules/MMM-Detector
+  cd ${MMHOME}/modules/EXT-Detector
 else
-  cd ~/MagicMirror/modules/MMM-Detector
+  cd ~/MagicMirror/modules/EXT-Detector
 fi
 
 # deleting package.json because npm install add/update package
@@ -54,9 +54,9 @@ git pull
 git checkout package.json
 if [ "${MMHOME}" ]
 then
-  cd ${MMHOME}/modules/MMM-Detector/node_modules
+  cd ${MMHOME}/modules/EXT-Detector/node_modules
 else
-  cd ~/MagicMirror/modules/MMM-Detector/node_modules
+  cd ~/MagicMirror/modules/EXT-Detector/node_modules
 fi
 
 Installer_info "Deleting ALL @bugsounet libraries..."
@@ -64,9 +64,9 @@ Installer_info "Deleting ALL @bugsounet libraries..."
 rm -rf @bugsounet
 if [ "${MMHOME}" ]
 then
-  cd ${MMHOME}/modules/MMM-Detector
+  cd ${MMHOME}/modules/EXT-Detector
 else
-  cd ~/MagicMirror/modules/MMM-Detector
+  cd ~/MagicMirror/modules/EXT-Detector
 fi
 
 Installer_info "Ready for Installing..."

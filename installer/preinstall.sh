@@ -22,7 +22,7 @@ cd "$Installer_dir"
 source utils.sh
 
 # module name
-Installer_module="MMM-Detector"
+Installer_module="EXT-Detector"
 
 # check version
 Installer_version="$(cat ../package.json | grep version | cut -c14-30 2>/dev/null)"

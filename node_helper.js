@@ -1,4 +1,4 @@
-/** MMM-Detector helper **/
+/** EXT-Detector helper **/
 
 "use strict"
 const { getPlatform } = require("./platform.js")
@@ -8,7 +8,7 @@ let log = (...args) => { console.log("[DETECTOR]", ...args) }
 
 module.exports = NodeHelper.create({
   start: function () {
-    console.log("[DETECTOR] MMM-Detector Version:", require('./package.json').version , "rev:", require('./package.json').rev)
+    console.log("[DETECTOR] EXT-Detector Version:", require('./package.json').version , "rev:", require('./package.json').rev)
     this.config = {}
     this.porcupine = null
     this.porcupineConfig = []
@@ -18,6 +18,7 @@ module.exports = NodeHelper.create({
     this.Porcupine = []
     this.porcupineCanRestart = false
     this.detector = false
+    this.running = false
     this.lib = {}
     this.PLATFORM_RECORDER = new Map()
     this.PLATFORM_RECORDER.set("linux", "arecord")
@@ -47,8 +48,8 @@ module.exports = NodeHelper.create({
     if (!this.config.debug) log = () => { /* do nothing */ }
     log("Config:", this.config)
     if (this.config.touchOnly) {
-      console.log("[DETECTOR] Started with Touch Screen Feature only")
-      return this.sendSocketNotification("LISTENING")
+      console.log("[DETECTOR] Ready with Touch Screen Feature only")
+      return
     }
 
     await this.detectorFilter()
@@ -57,7 +58,7 @@ module.exports = NodeHelper.create({
     let bugsounet = await this.loadBugsounetLibrary()
     if (bugsounet) {
       console.error("[DETECTOR] Warning:", bugsounet, "@bugsounet library not loaded !")
-      console.error("[DETECTOR] Try to solve it with `npm run rebuild` in MMM-Detector directory")
+      console.error("[DETECTOR] Try to solve it with `npm run rebuild` in EXT-Detector directory")
       return
     }
     else console.log("[DETECTOR] All needed @bugsounet library loaded !")
@@ -108,8 +109,6 @@ module.exports = NodeHelper.create({
         this.detectorModel += this.snowboy.modelsNumber()
       }
     }
-
-    if (this.config.autoStart) this.activate()
   },
   
   activate: async function() {
@@ -136,7 +135,8 @@ module.exports = NodeHelper.create({
 
   onDetected: function (from, detected) {
     this.deactivate()
-    this.sendSocketNotification("DETECTED", { from: from, key: detected } )
+    console.log("[DETECTOR] Detected:", detected, "from:", from)
+    this.sendSocketNotification("DETECTED")
   },
 
   deactivate: function(withNoti = true) {
@@ -193,5 +193,4 @@ module.exports = NodeHelper.create({
       resolve()
     })
   }
-
 })

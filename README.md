@@ -1,8 +1,6 @@
-# MMM-Detector
+# EXT-Detector
 
-![](https://raw.githubusercontent.com/bugsounet/MMM-Detector/dev/MMM-Detector.png)
-
-New detectors for assistants !
+Keywors Detectors for MMM-GoogleAssistant !
 
 Multi-keyword listener with
 * Snowboy Features
@@ -11,10 +9,9 @@ Multi-keyword listener with
 It will include:
   * Ok Google
   * Hey Google
-  * Alexa
   * Jarvis
   * Hey Siri
   * Computer
   * ...
 
-All informations is now the [wiki](http://wiki.bugsounet.fr/en/MMM-Detector)
+All informations is now the [wiki](http://wiki.bugsounet.fr/en/EXT-Detector)
