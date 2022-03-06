@@ -33,7 +33,7 @@ Module.register("EXT-Detector", {
   },
 
   start: function() {
-    this.displayLogo= []
+    this.ready = false
     this.listening = false
     this.logoGoogle= this.file("resources/google.png")
     this.micConfig= {
@@ -49,14 +49,15 @@ Module.register("EXT-Detector", {
   notificationReceived: function(notification, payload) {
     switch (notification) {
       case "EXT_DETECTOR-START":
-        this.sendSocketNotification("START")
+        if (this.ready) this.sendSocketNotification("START")
         break
       case "EXT_DETECTOR-STOP":
-        this.sendSocketNotification("STOP")
+        if (this.ready) this.sendSocketNotification("STOP")
         break
       case "GAv4_READY": // auto activate with GAv4
         this.sendNotification("EXT_HELLO", this.name)
         this.sendSocketNotification("START")
+        this.ready = true
         break
     }
   },
