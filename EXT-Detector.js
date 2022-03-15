@@ -56,7 +56,6 @@ Module.register("EXT-Detector", {
         break
       case "GAv4_READY": // auto activate with GAv4
         this.sendNotification("EXT_HELLO", this.name)
-        this.sendSocketNotification("START")
         this.ready = true
         break
     }
