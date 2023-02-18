@@ -1,14 +1,16 @@
 {
   "name": "EXT-Detector",
-  "version": "1.0.1",
-  "rev": "220315",
+  "version": "1.0.2",
+  "rev": "230218",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant v4",
   "main": "EXT-Detector.js",
   "scripts": {
     "preinstall": "installer/preinstall.sh",
     "postinstall": "installer/postinstall.sh",
     "update": "installer/update.sh",
-    "rebuild": "installer/rebuild.sh"
+    "rebuild": "installer/rebuild.sh",
+    "reset": "git reset --hard",
+    "clean": "rm -rf node_modules package-lock.json"
   },
   "keywords": [
     "magic mirror",
@@ -21,6 +23,10 @@
     "jarvis",
     "ok google"
   ],
+  "engines": {
+    "npm": ">=6.14.0",
+    "node": ">=14.0.0"
+  },
   "author": "bugsounet",
   "license": "MIT",
   "repository": {
@@ -33,6 +39,8 @@
   "dependencies": {
     "@bugsounet/porcupine": "^1.0.1",
     "@bugsounet/snowboy": "^2.2.3",
-    "magicmirror-rebuild": "^1.0.5"
+    "check-node-version": "^4.2.1",
+    "magicmirror-rebuild": "^1.0.5",
+    "minify": "^9.2.0"
   }
 }
