@@ -21,14 +21,21 @@ cd "$Installer_dir"
 
 source utils.sh
 
+Installer_info "Minify Main code..."
+node minify.js
+Installer_success "Done"
+echo
+
+cd ..
 # module name
 Installer_module="EXT-Detector"
 
-echo
-
-Installer_info "MagicMirror Rebuild..."
-cd ..
-./node_modules/.bin/MagicMirror-rebuild
+Installer_info "Rebuild MagicMirror..."
+MagicMirror-rebuild 2>/dev/null || {
+  Installer_error "Rebuild Failed"
+  exit 255
+}
+Installer_success "Done"
 echo
 
 # the end...
