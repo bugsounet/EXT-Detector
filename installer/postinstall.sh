@@ -30,8 +30,6 @@ cd ..
 # module name
 Installer_module="EXT-Detector"
 
-echo
-
 Installer_info "Rebuild MagicMirror..."
 MagicMirror-rebuild 2>/dev/null || {
   Installer_error "Rebuild Failed"
