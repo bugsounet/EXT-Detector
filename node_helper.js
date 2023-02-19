@@ -81,12 +81,16 @@ module.exports = NodeHelper.create({
 
     if (this.Porcupine.length) {
       /* Porcupine init */
+      this.porcupineConfig.accessKey = this.config.accessKey
+      this.porcupineConfig.customModel = __dirname + "/" + this.config.customModel
+      this.porcupineConfig.detectors = []
+      
       this.Porcupine.forEach(detector => {
         const values = {}
         if (detector.Model) {
           values.Model= detector.Model
           values.Sensitivity= detector.Sensitivity ? detector.Sensitivity: 0.7
-          this.porcupineConfig.push(values)
+          this.porcupineConfig.detectors.push(values)
         }
       })
       log("Porcupine DetectorConfig:", this.porcupineConfig)

@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "1.0.2",
-  "rev": "230218",
+  "version": "2.0.0",
+  "rev": "230219",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant v4",
   "main": "EXT-Detector.js",
   "scripts": {
@@ -41,6 +41,7 @@
     "@bugsounet/snowboy": "^2.2.3",
     "check-node-version": "^4.2.1",
     "magicmirror-rebuild": "^1.0.5",
-    "minify": "^9.2.0"
+    "minify": "^9.2.0",
+    "@picovoice/porcupine-node": "^2.1.7"
   }
 }
