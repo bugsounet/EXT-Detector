@@ -9,6 +9,8 @@ Module.register("EXT-Detector", {
     debug: false,
     useIcon: true,
     touchOnly: false,
+    porcupineAccessKey: null,
+    porcupineCustomModel: null,
     snowboyMicConfig: {
       audioGain: 2.0,
       applyFrontend: true // When you use only `snowboy` and `smart_mirror`, `false` is better. But with other models, `true` is better.
@@ -84,6 +86,17 @@ Module.register("EXT-Detector", {
           type: "error"
         })
         break
+      case "ACCESSKEY":
+        this.sendNotification("EXT_ALERT", {
+          message: "Error: No porcupineAccessKey provided in config",
+          type: "error"
+        })
+        break
+      case "PORCUPINENOTINIT":
+        this.sendNotification("EXT_ALERT", {
+          message: "Error: Can't start Porcupine detector",
+          type: "error"
+        })
     }
   },
 

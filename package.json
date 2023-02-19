@@ -37,7 +37,7 @@
     "url": "https://forum.bugsounet.fr"
   },
   "dependencies": {
-    "@bugsounet/porcupine": "^1.0.1",
+    "@bugsounet/porcupine": "https://github.com/bugsounet/porcupine/tree/v2",
     "@bugsounet/snowboy": "^2.2.3",
     "check-node-version": "^4.2.1",
     "magicmirror-rebuild": "^1.0.5",

@@ -81,10 +81,13 @@ module.exports = NodeHelper.create({
 
     if (this.Porcupine.length) {
       /* Porcupine init */
-      this.porcupineConfig.accessKey = this.config.accessKey
-      this.porcupineConfig.customModel = __dirname + "/" + this.config.customModel
+      this.porcupineConfig.accessKey = this.config.porcupineAccessKey || null
+      this.porcupineConfig.customModel = this.config.porcupineCustomModel ? __dirname + "/" + this.config.porcupineCustomModel : null
       this.porcupineConfig.detectors = []
-      
+
+      if (!this.porcupineConfig.accessKey) {
+        this.sendSocketNotification("ACCESSKEY")
+      }
       this.Porcupine.forEach(detector => {
         const values = {}
         if (detector.Model) {
@@ -96,9 +99,13 @@ module.exports = NodeHelper.create({
       log("Porcupine DetectorConfig:", this.porcupineConfig)
       this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.mic, detect => this.onDetected("Porcupine", detect), this.config.debug)
       this.porcupine.init()
-      if (this.porcupine.keywordNames.length) {
-        console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
-        this.detectorModel += this.porcupine.keywordNames.length
+      if (!this.porcupine.initialized) {
+        this.sendSocketNotification("PORCUPINENOTINIT")
+      } else {
+        if (this.porcupine.keywordNames && this.porcupine.keywordNames.length) {
+          console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
+          this.detectorModel += this.porcupine.keywordNames.length
+        }
       }
     }
 
@@ -117,7 +124,7 @@ module.exports = NodeHelper.create({
   
   activate: async function() {
     if (this.config.touchOnly) return this.sendSocketNotification("LISTENING")
-    if (this.porcupine && (this.porcupine.keywordNames.length || this.porcupineCanRestart)) {
+    if (this.porcupine && this.porcupine.initialized && (this.porcupine.keywordNames.length || this.porcupineCanRestart)) {
       this.porcupine.start()
       this.porcupineCanRestart = true
       this.detector = true
