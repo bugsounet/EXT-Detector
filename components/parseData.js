@@ -27,11 +27,11 @@ async function parse(that) {
   await detectorFilter(that)
   let bugsounet = await _load.libraries(that)
   if (bugsounet) {
-    console.error("[DETECTOR] Warning:", bugsounet, "needed library not loaded !")
+    console.error("[DETECTOR] [DATA] Warning:", bugsounet, "needed library not loaded !")
     return
   }
   if (that.config.touchOnly) {
-    console.log("[DETECTOR] Ready with Touch Screen Feature only")
+    console.log("[DETECTOR] [DATA] Ready with Touch Screen Feature only")
     return
   }
 
@@ -41,13 +41,13 @@ async function parse(that) {
   try {
     platform = that.lib.platform.getPlatform()
   } catch (error) {
-    console.error("[DETECTOR] The NodeJS binding does not support that platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
+    console.error("[DETECTOR] [DATA] The NodeJS binding does not support that platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
     process.exit(1)
     return
   }
 
   let recorderType = that.PLATFORM_RECORDER.get(platform)
-  console.log(`[DETECTOR] Platform: '${platform}'; attempting to use '${recorderType}' to access microphone ...`)
+  console.log(`[DETECTOR] [DATA] Platform: '${platform}'; attempting to use '${recorderType}' to access microphone ...`)
   that.config.mic.recorder= recorderType
   that.config.snowboyMicConfig.recorder= recorderType
 
@@ -75,7 +75,7 @@ async function parse(that) {
       that.sendSocketNotification("PORCUPINENOTINIT")
     } else {
       if (that.porcupine.keywordNames && that.porcupine.keywordNames.length) {
-        console.log("[DETECTOR] Porcupine is initialized with", that.porcupine.keywordNames.length, "Models:", that.porcupine.keywordNames.toString())
+        console.log("[DETECTOR] [DATA] Porcupine is initialized with", that.porcupine.keywordNames.length, "Models:", that.porcupine.keywordNames.toString())
         that.detectorModel += that.porcupine.keywordNames.length
       }
     }
@@ -88,7 +88,7 @@ async function parse(that) {
     that.snowboy = await new that.lib.Snowboy.Snowboy(that.snowboyConfig, that.config.snowboyMicConfig, detect => that.lib.rules.onDetected(that,"Snowboy", detect), that.config.debug)
     that.snowboy.init()
     if (that.snowboy.modelsNumber()) {
-      console.log("[DETECTOR] Snowboy is initialized with", that.snowboy.modelsNumber(), "Models:", that.snowboy.modelsNames())
+      console.log("[DETECTOR] [DATA] Snowboy is initialized with", that.snowboy.modelsNumber(), "Models:", that.snowboy.modelsNames())
       that.detectorModel += that.snowboy.modelsNumber()
     }
   }
