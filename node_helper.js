@@ -1,31 +1,12 @@
 /** EXT-Detector helper **/
 
 "use strict"
-const { getPlatform } = require("./platform.js")
+var parseData = require("./components/parseData")
 var NodeHelper = require("node_helper")
-
-let log = (...args) => { console.log("[DETECTOR]", ...args) }
 
 module.exports = NodeHelper.create({
   start: function () {
-    console.log("[DETECTOR] EXT-Detector Version:", require('./package.json').version , "rev:", require('./package.json').rev)
-    this.config = {}
-    this.porcupine = null
-    this.porcupineConfig = []
-    this.snowboyConfig = {}
-    this.snowboy = null
-    this.Snowboy = []
-    this.Porcupine = []
-    this.porcupineCanRestart = false
-    this.detector = false
-    this.running = false
-    this.lib = {}
-    this.PLATFORM_RECORDER = new Map()
-    this.PLATFORM_RECORDER.set("linux", "arecord")
-    this.PLATFORM_RECORDER.set("mac", "sox")
-    this.PLATFORM_RECORDER.set("raspberry-pi", "arecord")
-    this.PLATFORM_RECORDER.set("windows", "sox")
-    this.detectorModel = 0
+    parseData.init(this)
   },
 
   socketNotificationReceived: function (notification, payload) {
@@ -35,173 +16,16 @@ module.exports = NodeHelper.create({
         this.initialize()
         break
       case "START":
-        if (!this.running) this.activate()
+        if (!this.running) this.lib.rules.activate(this)
         break
       case "STOP":
-        if (this.running) this.deactivate(payload)
+        if (this.running) this.lib.rules.deactivate(this,payload)
         break
     }
   },
 
   initialize: async function() {
-    var debug = (this.config.debug) ? this.config.debug : false
-    if (!this.config.debug) log = () => { /* do nothing */ }
-    log("Config:", this.config)
-    if (this.config.touchOnly) {
-      console.log("[DETECTOR] Ready with Touch Screen Feature only")
-      return
-    }
-
-    await this.detectorFilter()
-
-    /** Load @bugsounet libraries **/
-    let bugsounet = await this.loadBugsounetLibrary()
-    if (bugsounet) {
-      console.error("[DETECTOR] Warning:", bugsounet, "@bugsounet library not loaded !")
-      console.error("[DETECTOR] Try to solve it with `npm run rebuild` in EXT-Detector directory")
-      return
-    }
-    else console.log("[DETECTOR] All needed @bugsounet library loaded !")
-
-    /** autodetect platform / recorder **/
-    /** Warn: Mac / windows not yet supported by detector **/
-    let platform
-    try {
-      platform = getPlatform()
-    } catch (error) {
-      console.error("[DETECTOR] The NodeJS binding does not support this platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
-      process.exit(1)
-      return
-    }
-
-    let recorderType = this.PLATFORM_RECORDER.get(platform)
-    console.log(`[DETECTOR] Platform: '${platform}'; attempting to use '${recorderType}' to access microphone ...`)
-    this.config.mic.recorder= recorderType
-    this.config.snowboyMicConfig.recorder= recorderType
-
-    if (this.Porcupine.length) {
-      /* Porcupine init */
-      this.porcupineConfig.accessKey = this.config.porcupineAccessKey || null
-      this.porcupineConfig.customModel = this.config.porcupineCustomModel ? __dirname + "/" + this.config.porcupineCustomModel : null
-      this.porcupineConfig.detectors = []
-
-      if (!this.porcupineConfig.accessKey) {
-        this.sendSocketNotification("ACCESSKEY")
-      }
-      this.Porcupine.forEach(detector => {
-        const values = {}
-        if (detector.Model) {
-          values.Model= detector.Model
-          values.Sensitivity= detector.Sensitivity ? detector.Sensitivity: 0.7
-          this.porcupineConfig.detectors.push(values)
-        }
-      })
-      log("Porcupine DetectorConfig:", this.porcupineConfig)
-      this.porcupine = await new this.lib.Porcupine(this.porcupineConfig, this.config.mic, detect => this.onDetected("Porcupine", detect), this.config.debug)
-      this.porcupine.init()
-      if (!this.porcupine.initialized) {
-        this.sendSocketNotification("PORCUPINENOTINIT")
-      } else {
-        if (this.porcupine.keywordNames && this.porcupine.keywordNames.length) {
-          console.log("[DETECTOR] Porcupine is initialized with", this.porcupine.keywordNames.length, "Models:", this.porcupine.keywordNames.toString())
-          this.detectorModel += this.porcupine.keywordNames.length
-        }
-      }
-    }
-
-    if (this.Snowboy.length) {
-      /* Snowboy init */
-      this.snowboyConfig = this.Snowboy
-      log("Snowboy DetectorConfig:", this.snowboyConfig)
-      this.snowboy = await new this.lib.Snowboy(this.snowboyConfig, this.config.snowboyMicConfig, detect => this.onDetected("Snowboy", detect), this.config.debug)
-      this.snowboy.init()
-      if (this.snowboy.modelsNumber()) {
-        console.log("[DETECTOR] Snowboy is initialized with", this.snowboy.modelsNumber(), "Models:", this.snowboy.modelsNames())
-        this.detectorModel += this.snowboy.modelsNumber()
-      }
-    }
-  },
-  
-  activate: async function() {
-    if (this.config.touchOnly) return this.sendSocketNotification("LISTENING")
-    if (this.porcupine && this.porcupine.initialized && (this.porcupine.keywordNames.length || this.porcupineCanRestart)) {
-      this.porcupine.start()
-      this.porcupineCanRestart = true
-      this.detector = true
-    }
-    if (this.snowboy && this.snowboy.modelsNumber()) {
-      this.snowboy.start()
-      this.detector = true
-    }
-    if (this.detector) {
-      this.running = true
-      this.sendSocketNotification("LISTENING")
-      console.log("[DETECTOR] Starts listening.", this.detectorModel, "Models")
-    }
-    else {
-      this.sendSocketNotification("NOT_INITIALIZED")
-      console.error("[DETECTOR] No detector initialized!")
-    }
-  },
-
-  onDetected: function (from, detected) {
-    this.deactivate()
-    console.log("[DETECTOR] Detected:", detected, "from:", from)
-    this.sendSocketNotification("DETECTED")
-  },
-
-  deactivate: function(withNoti = true) {
-    if (this.config.touchOnly) return
-    if (this.porcupine) {
-      this.porcupine.stop()
-      this.detector = false
-    }
-    if (this.snowboy) {
-      this.snowboy.stop()
-      this.detector= false
-    }
-    if (!this.detector) {
-      this.running = false
-      if (withNoti) this.sendSocketNotification("DISABLED")
-      console.log("[DETECTOR] Stops listening.")
-    }
-  },
-
-  /** Load require @busgounet library **/
-  /** It will not crash MM (black screen) **/
-  /** just inform user :) **/
-  loadBugsounetLibrary: function() {
-    let errors = 0
-    return new Promise(resolve => {
-      if (this.Porcupine.length) {
-        try {
-          this.lib["Porcupine"] = require("@bugsounet/porcupine")
-          log("Loaded: @bugsounet/porcupine")
-        } catch (e) {
-          console.error("[DETECTOR] Porcupine library: Loading error!" , e)
-          this.sendSocketNotification("ERROR" , "Porcupine")
-          errors++
-        }
-      }
-      if (this.Snowboy.length) {
-        try {
-          this.lib["Snowboy"] = require("@bugsounet/snowboy").Snowboy
-          log("Loaded: @bugsounet/snowboy")
-        } catch (e) {
-          console.error("[DETECTOR] Snowboy library: Loading error!" , e)
-          this.sendSocketNotification("ERROR" , "Snowboy")
-          errors++
-        }
-      }
-      resolve(errors)
-    })
-  },
-
-  detectorFilter: function() {
-    return new Promise(resolve => {
-      this.Snowboy= this.config.detectors.filter(detector => detector.detector == "Snowboy")
-      this.Porcupine= this.config.detectors.filter(detector => detector.detector == "Porcupine")
-      resolve()
-    })
+    console.log("[DETECTOR] EXT-Detector Version:", require('./package.json').version , "rev:", require('./package.json').rev)
+    await parseData.parse(this)
   }
 })
