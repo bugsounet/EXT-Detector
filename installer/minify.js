@@ -4,7 +4,12 @@ const fs = require('fs')
 const files= [
  "../node_helper.js",
  "../EXT-Detector.js",
- "../platform.js"
+ "../components/platform.js",
+ "../components/loadLibraries.js",
+ "../components/parseData.js",
+ "../components/porcupine.js",
+ "../components/rules.js",
+ "../components/visual.js"
 ]
 
 // import minify
