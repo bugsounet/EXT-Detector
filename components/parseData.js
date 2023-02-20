@@ -39,7 +39,7 @@ async function parse(that) {
   /** Warn: Mac / windows not yet supported by detector **/
   let platform
   try {
-    platform = that.lib.platform.getPlatform()
+    platform = that.lib.platform.getPlatform(that)
   } catch (error) {
     console.error("[DETECTOR] [DATA] The NodeJS binding does not support that platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
     process.exit(1)

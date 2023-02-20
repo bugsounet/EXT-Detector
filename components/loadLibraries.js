@@ -5,6 +5,8 @@ function libraries(that) {
   if (that.config.debug) log = (...args) => { console.log("[DETECTOR] [LIB]", ...args) }
   let libraries= [
     // { "library to load" : "store library name" }
+    { "fs": "fs" },
+    { "os": "os" },
     { "../components/platform": "platform" },
     { "../components/rules": "rules" },
     { "../components/porcupine": "Porcupine" },
