@@ -24,7 +24,7 @@ function activate(that) {
 }
 
 function onDetected(that, from, detected) {
-  this.deactivate()
+  this.deactivate(that)
   console.log("[DETECTOR] [RULES] Detected:", detected, "from:", from)
   that.sendSocketNotification("DETECTED")
 }
