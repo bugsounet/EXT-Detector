@@ -15,7 +15,7 @@ function activate(that) {
   if (that.detector) {
     that.running = true
     that.sendSocketNotification("LISTENING")
-    console.log("[DETECTOR] [RULES] Starts listening.", that.detectorModel, "Models")
+    console.log("[DETECTOR] [RULES] Start listening.", that.detectorModel, "Models")
   }
   else {
     that.sendSocketNotification("NOT_INITIALIZED")
@@ -42,7 +42,7 @@ function deactivate(that, withNoti = true) {
   if (!that.detector) {
     that.running = false
     if (withNoti) that.sendSocketNotification("DISABLED")
-    console.log("[DETECTOR] [RULES] Stops listening.")
+    console.log("[DETECTOR] [RULES] Stop listening.")
   }
 }
 
