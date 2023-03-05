@@ -33,7 +33,7 @@ class DetectorVisual {
 
   DetectorActivateWord(that) {
     this.DetectorRefreshLogo(that,true)
-    that.sendNotification("GAv4_ACTIVATE")
+    that.sendNotification("GAv5_ACTIVATE")
   }
 
   DetectorRefreshLogo(that,disabled) {
