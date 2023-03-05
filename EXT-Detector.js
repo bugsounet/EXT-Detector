@@ -54,7 +54,7 @@ Module.register("EXT-Detector", {
       case "EXT_DETECTOR-STOP":
         if (this.ready) this.sendSocketNotification("STOP")
         break
-      case "GAv4_READY": // auto activate with GAv4
+      case "GAv5_READY":
         if (sender.name == "MMM-GoogleAssistant") {
           this.sendNotification("EXT_HELLO", this.name)
           this.ready = true
