@@ -1,6 +1,6 @@
 //
 // Module : EXT-Detector v2
-// Snowboy and Porcupine keywords listener for GAv4
+// Snowboy and Porcupine keywords listener for GA
 // @bugsounet
 //
 
@@ -44,7 +44,6 @@ Module.register("EXT-Detector", {
     this.config.snowboyMicConfig= configMerge({}, this.config.mic, this.config.snowboyMicConfig)
     if (this.config.touchOnly) this.config.useIcon = true
     this.visual = new DetectorVisual(this)
-    this.sendSocketNotification("INIT", this.config)
   },
 
   notificationReceived: function(notification, payload, sender) {
@@ -55,10 +54,9 @@ Module.register("EXT-Detector", {
       case "EXT_DETECTOR-STOP":
         if (this.ready) this.sendSocketNotification("STOP")
         break
-      case "GAv5_READY":
-        if (sender.name == "MMM-GoogleAssistant") {
-          this.sendNotification("EXT_HELLO", this.name)
-          this.ready = true
+      case "GW_READY":
+        if (sender.name == "Gateway") {
+          this.sendSocketNotification("INIT", this.config)
         }
         break
     }
@@ -66,24 +64,19 @@ Module.register("EXT-Detector", {
 
   socketNotificationReceived: function(notification, payload) {
     switch (notification) {
-      case "LISTENING":
-        this.visual.DetectorRefreshLogo(this,false)
-        break
-      case "DETECTED":
-        this.visual.DetectorActivateWord(this)
-        break
-      case "DISABLED":
-        this.visual.DetectorDisabled(this)
-        break
-      case "ERROR":
-        this.sendNotification("EXT_ALERT", {
-          message: "Error when loading " + payload.library + " library. Try `npm run rebuild` in EXT-Detector directory",
-          type: "error"
-        })
+      case "INITIALIZED":
+        this.sendNotification("EXT_HELLO", this.name)
+        this.ready = true
         break
       case "NOT_INITIALIZED":
         this.sendNotification("EXT_ALERT", {
           message: "Error: No detectors found, please review your configuration",
+          type: "error"
+        })
+        break
+      case "ERROR":
+        this.sendNotification("EXT_ALERT", {
+          message: "Error when loading " + payload.library + " library. Try `npm run rebuild` in EXT-Detector directory",
           type: "error"
         })
         break
@@ -98,6 +91,15 @@ Module.register("EXT-Detector", {
           message: "Error: Can't start Porcupine detector",
           type: "error"
         })
+      case "LISTENING":
+        this.visual.DetectorRefreshLogo(this,false)
+        break
+      case "DETECTED":
+        this.visual.DetectorActivateWord(this)
+        break
+      case "DISABLED":
+        this.visual.DetectorDisabled(this)
+        break
     }
   },
 

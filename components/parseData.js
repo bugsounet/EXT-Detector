@@ -92,6 +92,14 @@ async function parse(that) {
       that.detectorModel += that.snowboy.modelsNumber()
     }
   }
+
+  if (that.detectorModel) {
+    that.sendSocketNotification("INITIALIZED")
+    console.log("[DETECTOR] [DATA] Initialized")
+  } else {
+    that.sendSocketNotification("NOT_INITIALIZED")
+    console.error("[DETECTOR] [DATA] No detector initialized!")
+  }
 }
 
 function detectorFilter(that) {
