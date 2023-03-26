@@ -55,9 +55,7 @@ Module.register("EXT-Detector", {
         if (this.ready) this.sendSocketNotification("STOP")
         break
       case "GW_READY":
-        if (sender.name == "Gateway") {
-          this.sendSocketNotification("INIT", this.config)
-        }
+        if (sender.name == "Gateway") this.sendSocketNotification("INIT", this.config)
         break
     }
   },
@@ -74,6 +72,7 @@ Module.register("EXT-Detector", {
           type: "error"
         })
         break
+      case "WARNING":
       case "ERROR":
         this.sendNotification("EXT_ALERT", {
           message: "Error when loading " + payload.library + " library. Try `npm run rebuild` in EXT-Detector directory",
@@ -104,15 +103,11 @@ Module.register("EXT-Detector", {
   },
 
   getStyles: function(){
-    return [
-      this.file("EXT-Detector.css")
-    ]
+    return [ this.file("EXT-Detector.css") ]
   },
 
   getScripts: function() {
-    return [
-      "/modules/EXT-Detector/components/visual.js"
-    ]
+    return [ "/modules/EXT-Detector/components/visual.js" ]
   },
 
   getDom: function() {

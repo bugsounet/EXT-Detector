@@ -45,8 +45,7 @@ class DetectorVisual {
       icon.classList.add("flash")
     } else {
       this.listening = true
-      icon.classList.remove("busy")
-      icon.classList.remove("flash")
+      icon.classList.remove("busy","flash")
     }
   }
 
