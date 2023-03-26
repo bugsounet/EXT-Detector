@@ -74,6 +74,7 @@ Module.register("EXT-Detector", {
           type: "error"
         })
         break
+      case "WARNING":
       case "ERROR":
         this.sendNotification("EXT_ALERT", {
           message: "Error when loading " + payload.library + " library. Try `npm run rebuild` in EXT-Detector directory",
