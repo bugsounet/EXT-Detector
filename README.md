@@ -1,6 +1,6 @@
 # EXT-Detector
 
-## Plugin for `MMM-GoogleAssistant` v5.x
+## Plugin for `MMM-GoogleAssistant`
 
 Keywords Detectors for MMM-GoogleAssistant !
 
