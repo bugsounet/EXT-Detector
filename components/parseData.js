@@ -32,6 +32,7 @@ async function parse(that) {
   }
   if (that.config.touchOnly) {
     console.log("[DETECTOR] [DATA] Ready with Touch Screen Feature only")
+    that.sendSocketNotification("INITIALIZED")
     return
   }
 
