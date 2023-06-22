@@ -16,7 +16,8 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "ignoreDeprecations": "5.0"
     },
     "files": [
       "lib/node/index.ts",

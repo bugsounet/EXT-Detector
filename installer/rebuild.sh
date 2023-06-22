@@ -48,7 +48,7 @@ fi
 
 echo
 Installer_info "Cleaning..."
-rm -rf node_modules build bin lib/node/building *.*.*
+rm -rf node_modules build bin lib/node/binding/ *.*.* lib/node/index.js
 Installer_success "Done."
 echo
 Installer_info "Upgrading EXT-Detector..."
