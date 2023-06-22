@@ -43,31 +43,11 @@ else
   cd ~/MagicMirror/modules/EXT-Detector
 fi
 
-# deleting package.json because npm install add/update package
-rm -f package.json package-lock.json
-
 Installer_info "Updating..."
 
 git reset --hard HEAD
 git pull
-#fresh package.json
-git checkout package.json
-if [ "${MMHOME}" ]
-then
-  cd ${MMHOME}/modules/EXT-Detector/node_modules
-else
-  cd ~/MagicMirror/modules/EXT-Detector/node_modules
-fi
-
-Installer_info "Deleting ALL @bugsounet libraries..."
-
-rm -rf @bugsounet
-if [ "${MMHOME}" ]
-then
-  cd ${MMHOME}/modules/EXT-Detector
-else
-  cd ~/MagicMirror/modules/EXT-Detector
-fi
+echo
 
 Installer_info "Ready for Installing..."
 
