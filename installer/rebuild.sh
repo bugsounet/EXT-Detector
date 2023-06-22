@@ -47,13 +47,12 @@ else
 fi
 
 echo
-Installer_info "Deleting: package-lock.json node_modules" 
-rm -rf package.json package-lock.json node_modules
+Installer_info "Cleaning..."
+rm -rf node_modules build bin lib/node/binding/ *.*.* lib/node/index.js
 Installer_success "Done."
 echo
 Installer_info "Upgrading EXT-Detector..."
 git reset --hard HEAD
-git checkout package.json
 git pull
 Installer_success "Done."
 echo
