@@ -48,7 +48,7 @@ fi
 
 echo
 Installer_info "Deleting: package-lock.json node_modules build bin"
-rm -rf package.json package-lock.json node_modules build bin
+rm -rf package.json package-lock.json node_modules build bin *.*.*
 Installer_success "Done."
 echo
 Installer_info "Upgrading EXT-Detector..."
