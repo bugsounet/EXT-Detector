@@ -66,7 +66,7 @@ class Snowboy {
     this.models = []
     this.mic = null
     this.detector = null
-    this.debug = true //debug
+    this.debug = debug
     if (!this.debug) log = function() { /* do nothing */ }
     this.defaultConfig = {
       usePMDL: false,
