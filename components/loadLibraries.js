@@ -10,7 +10,7 @@ function libraries(that) {
     { "../components/platform": "platform" },
     { "../components/rules": "rules" },
     { "../components/porcupine": "Porcupine" },
-    { "@bugsounet/snowboy": "Snowboy" }
+    { "../components/snowboy": "Snowboy" }
   ]
   let errors = 0
   return new Promise(resolve => {

@@ -30,6 +30,14 @@ cd ..
 # module name
 Installer_module="EXT-Detector"
 
+Installer_info "Prepare snowboy library..."
+tsc -p tsconfig.json || {
+  Installer_error "Failed!"
+  exit 255
+}
+Installer_success "Done"
+echo
+
 Installer_info "Rebuild MagicMirror..."
 MagicMirror-rebuild 2>/dev/null || {
   Installer_error "Rebuild Failed"
