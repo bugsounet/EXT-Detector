@@ -48,12 +48,11 @@ fi
 
 echo
 Installer_info "Cleaning..."
-rm -rfv package.json package-lock.json node_modules build bin lib/node/building *.*.*
+rm -rf node_modules build bin lib/node/building *.*.*
 Installer_success "Done."
 echo
 Installer_info "Upgrading EXT-Detector..."
 git reset --hard HEAD
-git checkout package.json
 git pull
 Installer_success "Done."
 echo
