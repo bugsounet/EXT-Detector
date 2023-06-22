@@ -44,7 +44,6 @@
     "url": "https://forum.bugsounet.fr"
   },
   "dependencies": {
-    "@bugsounet/node-lpcm16": "^1.0.2",
     "@mapbox/node-pre-gyp": "^1.0.10",
     "@picovoice/porcupine-node": "^2.2.0",
     "@types/node": "^20.3.1",

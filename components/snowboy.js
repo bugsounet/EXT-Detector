@@ -7,7 +7,7 @@ const path = require("path")
 const fs = require("fs")
 const Detector = require("../lib/node/index.js").Detector
 const Models = require("../lib/node/index.js").Models
-const Recorder = require("@bugsounet/node-lpcm16")
+const Recorder = require("../components/lpcm16.js")
 
 var snowboyDict = {
   "smart_mirror": {
@@ -53,7 +53,7 @@ var snowboyDict = {
 }
 
 let log = function() {
-    var context = "[SNOWBOY]"
+    var context = "[DETECTOR] [SNOWBOY]"
     return Function.prototype.bind.call(console.log, console, context)
 }()
 
@@ -104,7 +104,7 @@ class Snowboy {
               log("Model selected:", item)
               if (config.Sensitivity) {
                   if ((isNaN(config.Sensitivity)) || (Math.ceil(config.Sensitivity) > 1)) {
-                    console.error("[SNOWBOY] Wrong Sensitivity value in", config.Model)
+                    console.error("[DETECTOR] [SNOWBOY] Wrong Sensitivity value in", config.Model)
                   } else {
                     if (item == ("jarvis" || "neo_ya")) {
                       value.sensitivity =config.Sensitivity + "," + config.Sensitivity
@@ -118,15 +118,15 @@ class Snowboy {
             }
           }
         }
-        if (this.model.length == 0 || !found) return console.error("[SNOWBOY] Error: model not found:", config.Model)
+        if (this.model.length == 0 || !found) return console.error("[DETECTOR] [SNOWBOY] Error: model not found:", config.Model)
         this.model.forEach((model)=>{
           this.model[nb].file = path.resolve(modelPath, config.Model + ".umdl")
           this.models.add(this.model[nb])
         })
       } else if (config.Model && config.usePMDL) {
-        var PMDLPath = path.resolve(__dirname, "../resources")
+        var PMDLPath = path.resolve(__dirname, "../resources") // personal PMDL are inside resources directory
         if (!fs.existsSync(PMDLPath + "/" + config.Model + ".pmdl")) {
-          return console.error("[SNOWBOY] "+ PMDLPath + "/" + config.Model + ".pmdl file not found !")
+          return console.error("[DETECTOR] [SNOWBOY] "+ PMDLPath + "/" + config.Model + ".pmdl file not found !")
         } else log("Personal Model selected:", config.Model + ".pmdl")
         var pmdl = {
           hotwords: config.Model,
@@ -135,7 +135,7 @@ class Snowboy {
         }
         if (config.Sensitivity) {
           if ((isNaN(config.Sensitivity)) || (Math.ceil(config.Sensitivity) > 1)) {
-            console.error("[SNOWBOY] Wrong Sensitivity value in", config.Model)
+            console.error("[DETECTOR] [SNOWBOY] Wrong Sensitivity value in", config.Model)
           } else {
             pmdl.sensitivity = config.Sensitivity
           }
@@ -145,11 +145,11 @@ class Snowboy {
         this.models.add(this.model[nb])
       }
     })
-    if (!this.model.length) console.error("[SNOWBOY] No models found!")
+    if (!this.model.length) console.error("[DETECTOR] [SNOWBOY] No models found!")
   }
 
   start () {
-    if (!this.models.models.length) return console.error("[SNOWBOY] Constructor Error: No Model is set... I can't start Listening!")
+    if (!this.models.models.length) return console.error("[DETECTOR] [SNOWBOY] Constructor Error: No Model is set... I can't start Listening!")
     this.detector = new Detector({
       resource: path.resolve(__dirname, "../resources/common.res"),
       models: this.models,
@@ -190,7 +190,7 @@ class Snowboy {
 
   error (err,code) {
     if (err || (code == "1")) {
-     if (err) console.error("[SNOWBOY][ERROR] " + err)
+     if (err) console.error("[DETECTOR] [SNOWBOY] " + err)
      this.stop()
      log("Retry restarting...")
      setTimeout(() => { this.start() },2000)
