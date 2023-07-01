@@ -17,10 +17,10 @@ PLATFORM_RECORDER_MAP.set("mac", "sox")
 PLATFORM_RECORDER_MAP.set("raspberry-pi", "arecord")
 PLATFORM_RECORDER_MAP.set("windows", "sox")
 
-const Recorder = require("@bugsounet/node-lpcm16")
+const Recorder = require("../components/lpcm16.js")
 
 let log = function() {
-    var context = "[PORCUPINE]"
+    var context = "[DETECTOR] [PORCUPINE]"
     return Function.prototype.bind.call(console.log, console, context)
 }()
 
@@ -51,10 +51,10 @@ class PORCUPINE {
     try {
       platform = getPlatform()
     } catch (error) {
-      console.error("[PORCUPINE] The NodeJS binding does not support this platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)")
+      console.error("[DETECTOR] [PORCUPINE] The NodeJS binding does not support this platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)")
       return console.error(error)
     }
-    if (!this.config.accessKey) return console.error("[PORCUPINE] Error: No AccessKey provided in config!")
+    if (!this.config.accessKey) return console.error("[DETECTOR] [PORCUPINE] Error: No AccessKey provided in config!")
 
     if (this.micConfig.recorder == "auto") {
       let recorderType = PLATFORM_RECORDER_MAP.get(platform)
@@ -71,7 +71,7 @@ class PORCUPINE {
   }
 
   init () {
-    if (!this.initialized) return console.error("[PORCUPINE] Can't init Porcupine! (missing accessKey)")
+    if (!this.initialized) return console.error("[DETECTOR] [PORCUPINE] Can't init Porcupine! (missing accessKey)")
     let keywordPaths = []
     let libraryFilePath = undefined
     let modelFilePath = undefined 
@@ -114,7 +114,7 @@ class PORCUPINE {
         .split("_")[0]
       this.keywordNames.push(keywordName)
     }
-    if (!keywordPaths.length) return console.error("[PORCUPINE] No keyword found!")
+    if (!keywordPaths.length) return console.error("[DETECTOR] [PORCUPINE] No keyword found!")
     try {
       this.porcupine = new Porcupine(this.config.accessKey, keywordPaths, sensitivities, modelFilePath, libraryFilePath)
       log(`Ready for listening this wake word(s): ${this.keywordNames}`)
@@ -125,7 +125,7 @@ class PORCUPINE {
   }
 
   async start () {
-    if (!this.initialized) return console.error("[PORCUPINE] Can't start Porcupine! (missing accessKey)")
+    if (!this.initialized) return console.error("[DETECTOR] [PORCUPINE] Can't start Porcupine! (missing accessKey)")
     if (!this.porcupine) await this.init()
     this.startListening()
     this.running = true
@@ -139,8 +139,8 @@ class PORCUPINE {
   /** secondary code **/
 
   Detector () {
-    if (!this.mic) return console.log("[PORCUPINE] Mic not activated!")
-    if (!this.porcupine) return console.error("[PORCUPINE] Porpucine is not initialized !")
+    if (!this.mic) return console.log("[DETECTOR] [PORCUPINE] Mic not activated!")
+    if (!this.porcupine) return console.error("[DETECTOR] [PORCUPINE] Porpucine is not initialized !")
     const frameLength = this.porcupine.frameLength
     const sampleRate = this.porcupine.sampleRate
     var frameAccumulator = [];
@@ -180,7 +180,7 @@ class PORCUPINE {
 
   error (err,code) {
     if (err || (code == "1")) {
-     if (err) console.error("[PORCUPINE][ERROR] " + err)
+     if (err) console.error("[DETECTOR] [PORCUPINE] " + err)
      this.stop()
      log("Retry restarting...")
      setTimeout(() => { this.start() },2000)

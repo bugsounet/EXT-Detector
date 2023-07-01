@@ -1,8 +1,7 @@
-/** Code minifier v1.2 **/
-/** 2023/02/28 **/
+/** Code minifier v1.3 **/
+/** 2023/06/23 **/
 /** @busgounet **/
 
-const check = require("check-node-version")
 const fs = require('fs')
 const { globSync } = require('glob')
 
@@ -47,20 +46,4 @@ async function minifyFiles() {
   })
 }
 
-check(
-  { node: ">= 16.0", },
-  (error, result) => {
-    if (error) {
-      console.error(error)
-      return
-    }
-    if (!result.isSatisfied) {
-      console.error("Warn: Master code optimization error!");
-      console.error("Needed node >= 16.0");
-      console.error("If you want to optimize really, you have use node v16.0 (or more)");
-      console.error("Info: Don't worry, this step is not compulsory!")
-    } else {
-      minifyFiles()
-    }
-  }
-)
+minifyFiles()
