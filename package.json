@@ -12,9 +12,6 @@
     "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
     "host": "https://github.com/bugsounet/snowboy"
   },
-   "engines": {
-    "node": ">=18"
-  },
   "scripts": {
     "preinstall": "installer/preinstall.sh",
     "postinstall": "installer/postinstall.sh",
