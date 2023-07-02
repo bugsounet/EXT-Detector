@@ -35,7 +35,7 @@
     "ok google"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=16.13.0"
   },
   "author": "bugsounet",
   "license": "MIT",
