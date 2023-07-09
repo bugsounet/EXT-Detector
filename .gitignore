@@ -1,6 +1,6 @@
 /node_modules/
-*.*.*
+/*.*.*
 /build/
 /bin/
-/lib/node/binding/
-/lib/node/index.js
+/components/lib/node/binding/*
+/components/lib/node/index.js
