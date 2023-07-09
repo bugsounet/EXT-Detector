@@ -20,9 +20,9 @@
         "ignoreDeprecations": "5.0"
     },
     "files": [
-      "lib/node/index.ts",
-      "lib/node/node-pre-gyp.d.ts",
-      "lib/node/SnowboyDetectNative.d.ts"
+      "components/lib/node/index.ts",
+      "components/lib/node/node-pre-gyp.d.ts",
+      "components/lib/node/SnowboyDetectNative.d.ts"
     ],
     "exclude": [
       "node_modules"

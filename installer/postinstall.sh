@@ -46,6 +46,11 @@ MagicMirror-rebuild 2>/dev/null || {
 Installer_success "Done"
 echo
 
+Installer_info "Cleaning..."
+rm -rf build bin *.*.*
+Installer_success "Done"
+echo
+
 # the end...
 Installer_warning "Support is now moved in a dedicated Server: https://forum.bugsounet.fr"
 Installer_warning "@bugsounet"

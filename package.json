@@ -1,13 +1,13 @@
 {
   "name": "EXT-Detector",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "rev": "230702",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
-  "typings": "lib/node/index.d.ts",
+  "typings": "components/lib/node/index.d.ts",
   "binary": {
     "module_name": "snowboy",
-    "module_path": "./lib/node/binding/{configuration}/{node_abi}-{platform}-{arch}/",
+    "module_path": "./components/lib/node/binding/{configuration}/{node_abi}-{platform}-{arch}/",
     "remote_path": "./{module_name}/v{version}/{configuration}/",
     "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
     "host": "https://github.com/bugsounet/snowboy"
@@ -18,7 +18,7 @@
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
-    "clean": "rm -rf node_modules package-lock.json build bin lib/node/binding/ lib/node/index.js *.*.*"
+    "clean": "rm -rf node_modules package-lock.json build bin components/lib/node/binding/ components/lib/node/index.js *.*.*"
   },
   "keywords": [
     "magic mirror",
@@ -48,7 +48,7 @@
     "@picovoice/porcupine-node": "^2.2.0",
     "@types/node": "^20.3.1",
     "glob": "^10.3.1",
-    "magicmirror-rebuild": "^1.0.5",
+    "magicmirror-rebuild": "^1.0.7",
     "minify": "^9.2.0",
     "nan": "^2.17.0",
     "typescript": "^5.1.3"
