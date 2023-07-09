@@ -21,10 +21,10 @@ cd "$Installer_dir"
 
 source utils.sh
 
-Installer_info "Minify Main code..."
-node minify.js
-Installer_success "Done"
-echo
+#Installer_info "Minify Main code..."
+#node minify.js
+#Installer_success "Done"
+#echo
 
 cd ..
 # module name
@@ -38,13 +38,13 @@ tsc -p tsconfig.json || {
 Installer_success "Done"
 echo
 
-Installer_info "Rebuild MagicMirror..."
-MagicMirror-rebuild 2>/dev/null || {
-  Installer_error "Rebuild Failed"
-  exit 255
-}
-Installer_success "Done"
-echo
+#Installer_info "Rebuild MagicMirror..."
+#MagicMirror-rebuild 2>/dev/null || {
+#  Installer_error "Rebuild Failed"
+#  exit 255
+#}
+#Installer_success "Done"
+#echo
 
 # the end...
 Installer_warning "Support is now moved in a dedicated Server: https://forum.bugsounet.fr"
