@@ -47,7 +47,7 @@ Installer_success "Done"
 echo
 
 Installer_info "Cleaning..."
-rm -rf build bin *.*.* lib
+rm -rf bin *.*.* lib
 Installer_success "Done"
 echo
 
