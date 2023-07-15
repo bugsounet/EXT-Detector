@@ -29,7 +29,7 @@ function libraries(that) {
             }
           }
         } catch (e) {
-          console.error("[DETECTOR] [LIB]", libraryToLoad, "Loading error!" , e.toString())
+          console.error("[DETECTOR] [LIB]", libraryToLoad, "Loading error!" , e.toString(),e)
           that.sendSocketNotification("WARNING" , {library: libraryToLoad })
           errors++
           that.lib.error = errors
