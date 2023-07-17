@@ -20,35 +20,35 @@ Installer_dir="$(Installer_get_current_dir)"
 cd "$Installer_dir"
 source utils.sh
 
-Installer_info "Welcome to EXT-Detector updater !"
+# Go back to module root
+cd ..
+
+# check version in package.json file
+Installer_version="$(grep -Eo '\"version\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
+Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
+
+# Let's start !
+Installer_info "Welcome to $Installer_module v$Installer_version Updater"
+
 echo
 
-MMHOME="${HOME}/MagicMirror"
-[ -d ${MMHOME}/modules/EXT-Detector ] || {
-  MMHOME=
-  for homedir in /usr/local /home/*
-  do
-    [ "${homedir}" == "/home/*" ] && continue
-    [ -d ${homedir}/MagicMirror/modules/EXT-Detector ] && {
-      MMHOME="${homedir}/MagicMirror"
-      break
-    }
-  done
-}
-
-if [ "${MMHOME}" ]
-then
-  cd ${MMHOME}/modules/EXT-Detector
-else
-  cd ~/MagicMirror/modules/EXT-Detector
+# Check not run as root
+if [ "$EUID" -eq 0 ]; then
+  Installer_error "npm install must not be used as root"
+  exit 255
 fi
 
-Installer_info "Updating..."
-
-git reset --hard HEAD
-git pull
 echo
+rm -f package-lock.json
 
+Installer_info "Updating..."
+(git reset --hard && git pull) || {
+  Installer_error "Update Failed!"
+  exit 255
+}
+Installer_success "Done"
+
+echo
 Installer_info "Ready for Installing..."
 
 # launch installer

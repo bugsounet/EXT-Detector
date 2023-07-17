@@ -6,7 +6,7 @@
 #--------------
 
 # postinstaller version
-Installer_vinstaller="1.0.9 by Bugsounet"
+Installer_vinstaller="2.0.0 by Bugsounet"
 
 # debug mode
 Installer_debug=false
@@ -53,30 +53,20 @@ Installer_checkOS () {
   [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
 }
 
-# check if all dependencies are installed
-Installer_check_dependencies () {
+Installer_update_dependencies () {
   Installer_debug "Test Wanted dependencies: ${dependencies[*]}"
   local missings=()
   for package in "${dependencies[@]}"; do
       Installer_is_installed "$package" || missings+=($package)
   done
   if [ ${#missings[@]} -gt 0 ]; then
-    Installer_warning "You must install missing dependencies before going further"
+    Installer_warning "Updating package..."
     for missing in "${missings[@]}"; do
       Installer_error "Missing package: $missing"
     done
-    Installer_yesno "Attempt to automatically install the above packages?" || exit 0
     Installer_info "Installing missing package..."
     Installer_update || exit 1
     Installer_install ${missings[@]} || exit 1
-  fi
-
-  if ! groups "$(whoami)" | grep -qw audio; then
-    Installer_warning "Your user should be part of audio group to list audio devices"
-    Installer_yesno "Would you like to add audio group to user $USER?" || exit 1
-    sudo usermod -a -G audio $USER # add audio group to user
-    Installer_warning "Please logout and login for new group permissions to take effect, then restart npm install"
-    exit
   fi
 }
 
@@ -173,11 +163,6 @@ Installer_log () {
   exec > >(tee >(Installer_add_timestamps >> installer.log)) 2>&1
 }
 
-# display gcc version
-Installer_gcc="$(gcc --version | grep gcc)"
-Installer_gcc_rev="$(echo "${Installer_gcc#g*) }")"
-Installer_gcc_version="$(echo $Installer_gcc_rev | cut -c1)"
-
 #  Installer_update
 Installer_update () {
   if [ "${debian}" ]
@@ -238,10 +223,7 @@ Installer_install () {
   then
     if [ "${have_apt}" ]
     then
-        sudo apt-get install -y $@ || {
-          Installer_error "\nInstall Failed"
-          exit 255
-        }
+        sudo apt-get install -y $@
         sudo apt-get clean
     else
       if [ "${have_dpkg}" ]
@@ -272,8 +254,6 @@ Installer_install () {
 #
 # $@ - list of packages to remove
 Installer_remove () {
-  echo
-  Installer_info "Removing $@"
   if [ "${debian}" ]
   then
     if [ "${have_apt}" ]
@@ -300,8 +280,16 @@ Installer_remove () {
       fi
     fi
   fi
-  echo
 }
 
+Installer_chk () {
+  CHKUSER=$(stat -c '%U' $1)
+  CHKGROUP=$(stat -c '%G' $1)
+  if [ $CHKUSER == "root" ] || [ $CHKGROUP == "root" ]; then
+     Installer_error "Checking $2: $CHKUSER/$CHKGROUP"
+     exit 255
+  fi
+  Installer_success "Checking $2: $CHKUSER/$CHKGROUP"
+}
 
 Installer_debug "[LOADED] utils.sh"
