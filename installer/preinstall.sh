@@ -18,69 +18,56 @@ Installer_dir="$(Installer_get_current_dir)"
 
 # move to installler directory
 cd "$Installer_dir"
-
 source utils.sh
+
+# Go back to module root
 cd ..
 
+echo
 # check version in package.json file
 Installer_version="$(grep -Eo '\"version\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
 Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
 
 # Let's start !
 Installer_info "Welcome to $Installer_module v$Installer_version"
+
 echo
 
-# delete package-lock.json (force)
-rm -f ../package-lock.json
-
 # Check not run as root
+Installer_info "No root checking..."
 if [ "$EUID" -eq 0 ]; then
   Installer_error "npm install must not be used as root"
   exit 255
 fi
+Installer_chk "$(pwd)/" "$Installer_module"
+Installer_chk "$(pwd)/../../" "MagicMirror"
+echo
 
 # Check platform compatibility
 Installer_info "Checking OS..."
 Installer_checkOS
 if  [ "$platform" == "osx" ]; then
   Installer_error "OS Detected: $OSTYPE ($os_name $os_version $arch)"
-  Installer_error "You need to do Manual Install"
-  exit 0
+  Installer_error "Automatic installation is not included"
+  echo
+  exit 255
 else
-  Installer_success "OS Detected: $OSTYPE ($os_name $os_version $arch)"
-fi
-
-echo
-
-# Required packages on Debian based systems
-deb_dependencies=(libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential)
-# Required packages on RPM based systems
-rpm_dependencies=(blas-devel file-libs sox sox-devel wget autoconf automake binutils bison flex gcc gcc-c++ glibc-devel libtool make pkgconf strace byacc ccache cscope ctags elfutils indent ltrace perf valgrind)
-# Check dependencies
-if [ "${debian}" ]
-then
-  dependencies=( "${deb_dependencies[@]}" )
-else
-  if [ "${have_dnf}" ]
-  then
-    dependencies=( "${rpm_dependencies[@]}" )
+  if  [ "$os_name" == "raspbian" ] && [ "$os_version" -lt 11 ]; then
+    Installer_error "OS Detected: $OSTYPE ($os_name $os_version $arch)"
+    Installer_error "Unfortunately, this module is not compatible with your OS"
+    Installer_error "Try to update your OS to the lasted version of raspbian"
+    echo
+    exit 255
   else
-    if [ "${have_yum}" ]
-    then
-      dependencies=( "${rpm_dependencies[@]}" )
-    else
-      dependencies=( "${deb_dependencies[@]}" )
-    fi
+    Installer_success "OS Detected: $OSTYPE ($os_name $os_version $arch)"
   fi
 fi
 
-[ "${__NO_DEP_CHECK__}" ] || {
-  Installer_info "Checking all dependencies..."
-  Installer_check_dependencies
-  Installer_success "All Dependencies needed are installed !"
-}
-
-cd ..
+echo
+# Check dependencies
+dependencies=(libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential)
+Installer_info "Checking all dependencies..."
+Installer_update_dependencies
+Installer_success "All Dependencies needed are installed !"
 
 echo
-Installer_info "Installing all npm libraries..."
