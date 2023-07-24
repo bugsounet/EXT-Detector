@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.3.2",
-  "rev": "230717",
+  "version": "2.3.3",
+  "rev": "230724",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
   "typings": "components/lib/node/index.d.ts",
@@ -13,12 +13,12 @@
     "host": "https://github.com/bugsounet/snowboy"
   },
   "scripts": {
-    "preinstall": "installer/preinstall.sh",
-    "postinstall": "installer/postinstall.sh",
+    "preinstall": "installer/preinstall.sh -d 'libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential'",
+    "postinstall": "installer/postinstall.sh -r -m -b",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
-    "clean": "rm -rf node_modules package-lock.json build bin components/lib/node/binding/ components/lib/node/index.js *.*.*"
+    "clean": "rm -rf node_modules package-lock.json"
   },
   "keywords": [
     "magic mirror",
@@ -47,8 +47,8 @@
     "@mapbox/node-pre-gyp": "^1.0.10",
     "@picovoice/porcupine-node": "^2.2.0",
     "@types/node": "^20.3.1",
-    "esbuild": "^0.18.11",
-    "glob": "^10.3.1",
+    "esbuild": "^0.18.16",
+    "glob": "^10.3.3",
     "magicmirror-rebuild": "^1.0.8",
     "nan": "^2.17.0",
     "typescript": "^5.1.3"

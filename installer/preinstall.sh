@@ -3,6 +3,15 @@
 # | npm preinstall |
 # +----------------+
 
+dependencies=
+
+while getopts ":d:" option; do
+  case $option in
+    d) # -d option for install dependencies
+       dependencies=($OPTARG);;
+  esac
+done
+
 # get the installer directory
 Installer_get_current_dir () {
   SOURCE="${BASH_SOURCE[0]}"
@@ -64,10 +73,9 @@ else
 fi
 
 echo
-# Check dependencies
-dependencies=(libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential)
-Installer_info "Checking all dependencies..."
-Installer_update_dependencies
-Installer_success "All Dependencies needed are installed !"
-
-echo
+#check dependencies
+if [[ -n $dependencies ]]; then
+  Installer_info "Checking all dependencies..."
+  Installer_update_dependencies || exit 255
+  Installer_success "All Dependencies needed are installed !"
+fi

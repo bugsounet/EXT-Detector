@@ -23,6 +23,7 @@ source utils.sh
 # Go back to module root
 cd ..
 
+echo
 # check version in package.json file
 Installer_version="$(grep -Eo '\"version\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
 Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
