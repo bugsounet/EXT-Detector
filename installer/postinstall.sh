@@ -36,6 +36,14 @@ cd "$Installer_dir"
 source utils.sh
 echo
 
+Installer_info "Prepare snowboy library..."
+tsc -p ../tsconfig.json || {
+  Installer_error "Failed!"
+  exit 255
+}
+Installer_success "Done"
+echo
+
 if [[ $minify == 1 ]]; then
   Installer_info "Minify Main code..."
   node minify.js || {
