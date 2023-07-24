@@ -1,5 +1,4 @@
-/** Code minifier v1.3 **/
-/** 2023/06/23 **/
+/** Code minifier **/
 /** @busgounet **/
 
 const { globSync } = require('glob')
