@@ -8,7 +8,7 @@ const esbuild = require("esbuild")
 var files = [
   "../" + require("../package.json").main,
   "../node_helper.js",
-  "../components/lib/node/index.js"
+  //"../components/lib/node/index.js"
 ]
 
 function searchFiles() {

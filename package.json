@@ -18,7 +18,7 @@
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
-    "clean": "rm -rf node_modules package-lock.json"
+    "clean": "rm -rf node_modules package-lock.json build bin components/lib/node/binding/ components/lib/node/index.js *.*.*"
   },
   "keywords": [
     "magic mirror",
