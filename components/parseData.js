@@ -28,6 +28,7 @@ async function parse(that) {
   let bugsounet = await _load.libraries(that)
   if (bugsounet) {
     console.error("[DETECTOR] [DATA] Warning:", bugsounet, "needed library not loaded !")
+    console.error("[DETECTOR] [DATA] Try to solve it with: npm run rebuild")
     return
   }
   if (that.config.touchOnly) {

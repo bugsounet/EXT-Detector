@@ -29,15 +29,15 @@ function libraries(that) {
             }
           }
         } catch (e) {
-          console.error("[DETECTOR] [LIB]", libraryToLoad, "Loading error!" , e.toString(),e)
+          console.error("[DETECTOR] [LIB]", libraryToLoad, "Loading error!" , e.message)
           that.sendSocketNotification("WARNING" , {library: libraryToLoad })
           errors++
           that.lib.error = errors
         }
       }
     })
+    if (!errors) console.log("[DETECTOR] [LIB] All libraries loaded!")
     resolve(errors)
-    console.log("[DETECTOR] [LIB] All libraries loaded!")
   })
 }
 
