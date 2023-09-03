@@ -48,7 +48,7 @@
     "@picovoice/porcupine-node": "^2.2.0",
     "@types/node": "^20.4.8",
     "esbuild": "^0.19.2",
-    "glob": "^10.3.3",
+    "glob": "^10.3.4",
     "magicmirror-rebuild": "^1.0.8",
     "nan": "^2.17.0",
     "typescript": "^5.1.3"
