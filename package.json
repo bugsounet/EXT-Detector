@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.3.4",
-  "rev": "230804",
+  "version": "2.3.5",
+  "rev": "231001",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
   "typings": "components/lib/node/index.d.ts",
@@ -46,11 +46,11 @@
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
     "@picovoice/porcupine-node": "^2.2.0",
-    "@types/node": "^20.4.5",
-    "esbuild": "^0.18.17",
-    "glob": "^10.3.3",
-    "magicmirror-rebuild": "^1.0.8",
-    "nan": "^2.17.0",
-    "typescript": "^5.1.3"
+    "@types/node": "^20.8.0",
+    "esbuild": "^0.19.4",
+    "glob": "^10.3.10",
+    "magicmirror-rebuild": "^1.0.9",
+    "nan": "^2.18.0",
+    "typescript": "^5.2.2"
   }
 }
