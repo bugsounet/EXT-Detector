@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
-    "@picovoice/porcupine-node": "^2.2.0",
+    "@picovoice/porcupine-node": "^3.0.0",
     "@types/node": "^20.8.9",
     "esbuild": "^0.19.5",
     "glob": "^10.3.10",
