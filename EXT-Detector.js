@@ -54,8 +54,8 @@ Module.register("EXT-Detector", {
       case "EXT_DETECTOR-STOP":
         if (this.ready) this.sendSocketNotification("STOP")
         break
-      case "GW_READY":
-        if (sender.name == "Gateway") this.sendSocketNotification("INIT", this.config)
+      case "GA_READY":
+        if (sender.name == "MMM-GoogleAssistant") this.sendSocketNotification("INIT", this.config)
         break
     }
   },
