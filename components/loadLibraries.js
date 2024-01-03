@@ -7,7 +7,6 @@ function libraries(that) {
     // { "library to load" : "store library name" }
     { "fs": "fs" },
     { "os": "os" },
-    { "../components/platform": "platform" },
     { "../components/rules": "rules" },
     { "../components/porcupine": "Porcupine" },
     { "../components/snowboy": "Snowboy" }

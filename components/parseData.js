@@ -14,11 +14,6 @@ async function init(that) {
   that.detector = false
   that.running = false
   that.lib = {}
-  that.PLATFORM_RECORDER = new Map()
-  that.PLATFORM_RECORDER.set("linux", "arecord")
-  that.PLATFORM_RECORDER.set("mac", "sox")
-  that.PLATFORM_RECORDER.set("raspberry-pi", "arecord")
-  that.PLATFORM_RECORDER.set("windows", "sox")
   that.detectorModel = 0
 }
 
@@ -37,21 +32,8 @@ async function parse(that) {
     return
   }
 
-  /** autodetect platform / recorder **/
-  /** Warn: Mac / windows not yet supported by detector **/
-  let platform
-  try {
-    platform = that.lib.platform.getPlatform(that)
-  } catch (error) {
-    console.error("[DETECTOR] [DATA] The NodeJS binding does not support that platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
-    process.exit(1)
-    return
-  }
-
-  let recorderType = that.PLATFORM_RECORDER.get(platform)
-  console.log(`[DETECTOR] [DATA] Platform: '${platform}'; attempting to use '${recorderType}' to access microphone ...`)
-  that.config.mic.recorder= recorderType
-  that.config.snowboyMicConfig.recorder= recorderType
+  that.config.mic.recorder= "arecord"
+  that.config.snowboyMicConfig.recorder= "arecord"
 
   if (that.Porcupine.length) {
     /* Porcupine init */
