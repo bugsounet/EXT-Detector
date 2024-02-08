@@ -1,43 +1,46 @@
-/** Visual Class of EXT-Detector V2 **/
-/** 23-02-20 **/
-
-/** this: this class
- ** that: MagicMirror core
- **/
+/*!*********************************
+* Visual Class of EXT-Detector V2
+* @bugsounet
+* 24-02-08
+***********************************/
 
 class DetectorVisual {
-  constructor(that) {
+  constructor(useIcon, Tools) {
+    this.useIcon = useIcon
+    this.file= (...args) => Tools.file(...args)
+    this.sendSocketNotification= (...args) => Tools.sendSocketNotification(...args)
+    this.sendNotification= (...args) => Tools.sendNotification(...args)
     this.listening = false
-    this.logoGoogle= that.file("resources/google.png")
+    this.logoGoogle= this.file("resources/google.png")
     console.log("[EXT-Detector] Visual Loaded")
   }
 
-  DetectorDisabled(that) {
-    if (!that.config.useIcon) return
+  DetectorDisabled() {
+    if (!this.useIcon) return
     this.listening = false
     var icon = document.getElementById("EXT_DETECTOR-ICON")
     icon.classList.add("busy")
     icon.classList.remove("flash")
   }
 
-  DetectorClickCheck(that) {
+  DetectorClickCheck() {
     if (!this.listening) return
-    this.DetectorClickActivate(that)
+    this.DetectorClickActivate()
   }
 
-  DetectorClickActivate(that) {
-    that.sendSocketNotification("STOP", false) // stop and don't send DISABLED callback
+  DetectorClickActivate() {
+    this.sendSocketNotification("STOP", false) // stop and don't send DISABLED callback
     this.listening = false
-    this.DetectorActivateWord(that)
+    this.DetectorActivateWord()
   }
 
-  DetectorActivateWord(that) {
-    this.DetectorRefreshLogo(that,true)
-    that.sendNotification("GA_ACTIVATE")
+  DetectorActivateWord() {
+    this.DetectorRefreshLogo(true)
+    this.sendNotification("GA_ACTIVATE")
   }
 
-  DetectorRefreshLogo(that,disabled) {
-    if (!that.config.useIcon) return
+  DetectorRefreshLogo(disabled) {
+    if (!this.useIcon) return
     var icon = document.getElementById("EXT_DETECTOR-ICON")
     if (disabled) {
       this.listening = false
@@ -49,18 +52,18 @@ class DetectorVisual {
     }
   }
 
-  DetectorDom(that) {
+  DetectorDom() {
     let wrapper = document.createElement('div')
     wrapper.id = "EXT_DETECTOR"
 
-    if (that.config.useIcon) {
+    if (this.useIcon) {
       var icon = document.createElement('div')
       icon.id= "EXT_DETECTOR-ICON"
-      icon.style.backgroundImage = "url("+this.logoGoogle+")"
+      icon.style.backgroundImage = `url(${this.logoGoogle})`
       icon.classList.add("busy")
       icon.onclick = (event)=> {
         event.stopPropagation()
-        this.DetectorClickCheck(that)
+        this.DetectorClickCheck()
       }
       wrapper.appendChild(icon)
     }
@@ -68,4 +71,3 @@ class DetectorVisual {
     return wrapper
   }
 }
-

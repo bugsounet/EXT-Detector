@@ -1,4 +1,8 @@
-/** EXT-Detector helper **/
+/*!********************
+* EXT-Detector helper
+* @bugsounet
+* 2024-02-08
+***********************/
 
 "use strict"
 var NodeHelper = require("node_helper")

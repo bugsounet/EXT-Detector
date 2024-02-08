@@ -1,11 +1,12 @@
-//
-// Module : EXT-Detector v2
-// Snowboy and Porcupine keywords listener for GA
-// @bugsounet
-//
+/*!***********************************************
+* Module : EXT-Detector v2
+* Snowboy and Porcupine keywords listener for GA
+* @bugsounet
+* 2024-02-08
+*************************************************/
 
 Module.register("EXT-Detector", {
-  requiresVersion: "2.24.0",
+  requiresVersion: "2.26.0",
   defaults: {
     debug: false,
     useIcon: true,
@@ -43,7 +44,13 @@ Module.register("EXT-Detector", {
     }
     this.config.snowboyMicConfig= configMerge({}, this.config.mic, this.config.snowboyMicConfig)
     if (this.config.touchOnly) this.config.useIcon = true
-    this.visual = new DetectorVisual(this)
+
+    let Tools = {
+      file: (...args) => this.file(...args),
+      sendSocketNotification: (...args) => this.sendSocketNotification(...args),
+      sendNotification: (...args) => this.sendNotification(...args)
+    }
+    this.visual = new DetectorVisual(this.config.useIcon,Tools)
   },
 
   notificationReceived: function(notification, payload, sender) {
@@ -75,7 +82,7 @@ Module.register("EXT-Detector", {
       case "WARNING":
       case "ERROR":
         this.sendNotification("EXT_ALERT", {
-          message: "Error when loading " + payload.library + " library. Try `npm run rebuild` in EXT-Detector directory",
+          message: `Error when loading ${payload.library} library. Try: 'npm run rebuild' in EXT-Detector directory`,
           type: "error"
         })
         break
@@ -91,13 +98,13 @@ Module.register("EXT-Detector", {
           type: "error"
         })
       case "LISTENING":
-        this.visual.DetectorRefreshLogo(this,false)
+        this.visual.DetectorRefreshLogo(false)
         break
       case "DETECTED":
-        this.visual.DetectorActivateWord(this)
+        this.visual.DetectorActivateWord()
         break
       case "DISABLED":
-        this.visual.DetectorDisabled(this)
+        this.visual.DetectorDisabled()
         break
     }
   },
@@ -111,6 +118,6 @@ Module.register("EXT-Detector", {
   },
 
   getDom: function() {
-    return this.visual.DetectorDom(this)
+    return this.visual.DetectorDom()
   }
 })

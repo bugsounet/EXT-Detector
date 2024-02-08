@@ -1,7 +1,9 @@
-/** Snowboy library **/
-/** multi-keyword listener
-/** @bugsounet  **/
-/** 2022-06-22  **/
+/*!************************
+* Snowboy library
+* multi-keyword listener
+* @bugsounet
+* 2024-02-08
+**************************/
 
 const path = require("path")
 const fs = require("fs")
