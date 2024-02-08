@@ -5,6 +5,7 @@
 * 2024-02-08
 **************************/
 
+"use strict"
 const path = require("path")
 const fs = require("fs")
 const Detector = require("../components/lib/node/index.js").Detector
@@ -54,10 +55,7 @@ var snowboyDict = {
   }
 }
 
-let log = function() {
-    var context = "[DETECTOR] [SNOWBOY]"
-    return Function.prototype.bind.call(console.log, console, context)
-}()
+var log = (...args) => { /* do nothing */ }
 
 class Snowboy {
   constructor(config, mic, callback = ()=>{}, debug) {
