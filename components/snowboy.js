@@ -126,11 +126,11 @@ class Snowboy {
       } else if (config.Model && config.usePMDL) {
         var PMDLPath = path.resolve(__dirname, "../resources") // personal PMDL are inside resources directory
         if (!fs.existsSync(PMDLPath + "/" + config.Model + ".pmdl")) {
-          return console.error("[DETECTOR] [SNOWBOY] "+ PMDLPath + "/" + config.Model + ".pmdl file not found !")
-        } else log("Personal Model selected:", config.Model + ".pmdl")
+          return console.error(`[DETECTOR] [SNOWBOY] ${PMDLPath}/${config.Model}.pmdl file not found !`)
+        } else log(`Personal Model selected: ${config.Model}.pmdl`)
         var pmdl = {
           hotwords: config.Model,
-          file: PMDLPath + "/" + config.Model + ".pmdl",
+          file: `${PMDLPath}/${config.Model}.pmdl`,
           sensitivity: "0.5"
         }
         if (config.Sensitivity) {
