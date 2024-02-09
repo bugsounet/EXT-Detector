@@ -1,7 +1,10 @@
-/** Porcupine library v2.0.0 **/
-/** @bugsounet  **/
-/** 2023-02-20  **/
+/*!*************************
+* Porcupine library v2.0.0
+* @bugsounet
+* 2024-02-08
+***************************/
 
+"use strict"
 const path = require("path")
 const { Porcupine } = require("@picovoice/porcupine-node")
 const { getPlatform } = require("@picovoice/porcupine-node/dist/platforms")
@@ -19,10 +22,7 @@ PLATFORM_RECORDER_MAP.set("windows", "sox")
 
 const Recorder = require("../components/lpcm16.js")
 
-let log = function() {
-    var context = "[DETECTOR] [PORCUPINE]"
-    return Function.prototype.bind.call(console.log, console, context)
-}()
+var log = (...args) => { /* do nothing */ }
 
 class PORCUPINE {
   constructor(config, mic, callback = ()=>{}, debug) {

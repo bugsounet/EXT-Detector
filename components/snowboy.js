@@ -1,8 +1,11 @@
-/** Snowboy library **/
-/** multi-keyword listener
-/** @bugsounet  **/
-/** 2022-06-22  **/
+/*!************************
+* Snowboy library
+* multi-keyword listener
+* @bugsounet
+* 2024-02-08
+**************************/
 
+"use strict"
 const path = require("path")
 const fs = require("fs")
 const Detector = require("../components/lib/node/index.js").Detector
@@ -52,10 +55,7 @@ var snowboyDict = {
   }
 }
 
-let log = function() {
-    var context = "[DETECTOR] [SNOWBOY]"
-    return Function.prototype.bind.call(console.log, console, context)
-}()
+var log = (...args) => { /* do nothing */ }
 
 class Snowboy {
   constructor(config, mic, callback = ()=>{}, debug) {
@@ -126,11 +126,11 @@ class Snowboy {
       } else if (config.Model && config.usePMDL) {
         var PMDLPath = path.resolve(__dirname, "../resources") // personal PMDL are inside resources directory
         if (!fs.existsSync(PMDLPath + "/" + config.Model + ".pmdl")) {
-          return console.error("[DETECTOR] [SNOWBOY] "+ PMDLPath + "/" + config.Model + ".pmdl file not found !")
-        } else log("Personal Model selected:", config.Model + ".pmdl")
+          return console.error(`[DETECTOR] [SNOWBOY] ${PMDLPath}/${config.Model}.pmdl file not found !`)
+        } else log(`Personal Model selected: ${config.Model}.pmdl`)
         var pmdl = {
           hotwords: config.Model,
-          file: PMDLPath + "/" + config.Model + ".pmdl",
+          file: `${PMDLPath}/${config.Model}.pmdl`,
           sensitivity: "0.5"
         }
         if (config.Sensitivity) {
