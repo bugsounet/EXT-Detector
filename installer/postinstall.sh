@@ -67,11 +67,6 @@ if [[ $rebuild == 1 ]]; then
   echo
 fi
 
-Installer_info "Cleaning..."
-rm -rf bin *.*.* lib
-Installer_success "Done"
-echo
-
 # module name
 Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
 
