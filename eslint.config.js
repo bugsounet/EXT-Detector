@@ -25,11 +25,15 @@ const config = [
       import: eslintPluginImport
     },
     rules: {
-      ...eslintConfigs.all.rules,
-      ...eslintPluginImport.configs.recommended.rules,
-      ...eslintPluginStylistic.configs["all-flat"].rules,
       eqeqeq: "error",
       "import/order": "error",
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          json: "always" // ignore json require (display EXT version and rev date)
+        }
+      ],
       "import/newline-after-import": "error",
       "no-param-reassign": "error",
       "no-prototype-builtins": "off",
@@ -52,51 +56,15 @@ const config = [
       "@stylistic/no-extra-parens": "off",
       "@stylistic/no-tabs": "off",
       "@stylistic/object-curly-spacing": ["error", "always"],
+      "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }],
       "@stylistic/operator-linebreak": ["error", "before"],
       "@stylistic/padded-blocks": "off",
       "@stylistic/quote-props": ["error", "as-needed"],
       "@stylistic/quotes": ["error", "double"],
+      "@stylistic/indent": ["error", 2], // indent 2 spaces
       "@stylistic/semi": ["error", "always"],
       "@stylistic/space-before-function-paren": ["error", "always"],
-      "@stylistic/spaced-comment": "off",
-
-      /* bugsounet rules */
-      "import/extensions": [
-        "error",
-        "ignorePackages",
-        {
-          json: "always" // ignore json require (display EXT version and rev date)
-        }
-      ],
-      "@stylistic/indent": ["error", 2], // indent 2 spaces
-      "default-case": "off",
-      "no-plusplus": "off",
-      "no-console": "off",
-      "no-ternary": "off",
-      "capitalized-comments": "off",
-      "consistent-this": "off",
-      "func-style": "off",
-      "init-declarations": "off",
-      "line-comment-position": "off",
-      "max-lines-per-function": ["error", 100],
-      "max-statements": ["error", 50],
-      "no-await-in-loop": "off",
-      "no-inline-comments": "off",
-      "no-magic-numbers": "off",
-      "no-undef": "warn",
-      "one-var": "off",
-      "prefer-destructuring": "off",
-      "sort-keys": "off",
-      strict: "off",
-      "new-cap": "off",
-      camelcase: ["error", { properties: "never" }],
-      "max-params": "off",
-      "no-empty-function": "off",
-      "max-depth": "off",
-      "prefer-object-spread": "off",
-      "consistent-return": "off",
-      "default-param-last": "off",
-      "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }]
+      "@stylistic/spaced-comment": "off"
     }
   }
 ];
