@@ -1,5 +1,5 @@
 const globals = require("globals");
-const {configs: eslintConfigs} = require("@eslint/js");
+const { configs: eslintConfigs } = require("@eslint/js");
 const eslintPluginImport = require("eslint-plugin-import");
 const eslintPluginStylistic = require("@stylistic/eslint-plugin");
 
@@ -20,7 +20,7 @@ const config = [
       ...eslintConfigs.all.rules,
       ...eslintPluginImport.configs.recommended.rules,
       ...eslintPluginStylistic.configs["all-flat"].rules,
-      "eqeqeq": "error",
+      eqeqeq: "error",
       "import/order": "error",
       "import/newline-after-import": "error",
       "no-param-reassign": "error",
@@ -51,6 +51,7 @@ const config = [
       "@stylistic/semi": ["error", "always"],
       "@stylistic/space-before-function-paren": ["error", "always"],
       "@stylistic/spaced-comment": "off",
+
       /* bugsounet rules */
       "import/extensions": [
         "error",
@@ -78,7 +79,7 @@ const config = [
       "one-var": "off",
       "prefer-destructuring": "off",
       "sort-keys": "off",
-      "strict": "off",
+      strict: "off",
       "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }]
     }
   }
