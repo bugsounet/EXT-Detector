@@ -91,8 +91,11 @@ const config = [
       "new-cap": "off",
       camelcase: ["error", { properties: "never" }],
       "max-params": "off",
-      "no-empty-function": "warn",
-      "max-depth": "warn",
+      "no-empty-function": "off",
+      "max-depth": "off",
+      "prefer-object-spread": "off",
+      "consistent-return": "off",
+      "default-param-last": "off",
       "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }]
     }
   }
