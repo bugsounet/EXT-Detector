@@ -4,16 +4,14 @@
 
 "use strict";
 
+/* eslint-disable max-lines-per-function */
+
 const spawn = require("child_process").spawn;
 
-let log = (function () {
-  const context = "[DETECTOR] [LPCM16]";
-  return Function.prototype.bind.call(console.log, console, context);
-}());
+let log = () => { /* do nothing */ };
 
 class LPCM16 {
   constructor (options, streamOut, afterCallback) {
-    this.cp = null;
     const defaults = {
       recorder: "arecord",
       sampleRate: 16000,
@@ -28,7 +26,9 @@ class LPCM16 {
     };
     this.options = Object.assign(defaults, options);
     const debug = (this.options.debug) ? this.options.debug : false;
-    if (!debug) { log = function () { /** do nothing **/ }; }
+    if (debug) {
+      log = (...args) => { console.log("[DETECTOR] [LPCM16]", ...args); };
+    }
     this.stream = null;
     this.streamOut = streamOut;
     this.afterCallback = afterCallback;
@@ -39,7 +39,10 @@ class LPCM16 {
     const options = this.options;
     let counter = 0;
     // Capture audio stream
-    var cmd, cmdArgs, cmdOptions;
+    let cmd = null;
+    let cmdArgs = [];
+    let cmdOptions = {};
+
     switch (options.recorder) {
 
       /*
@@ -47,8 +50,8 @@ class LPCM16 {
        * instead of "rec"
        */
       case "sox":
-        var cmd = "sox";
-        var cmdArgs = [
+        cmd = "sox";
+        cmdArgs = [
           "-q", // show no progress
           "-t",
           "waveaudio", // audio type
@@ -63,32 +66,6 @@ class LPCM16 {
           "16", // precision (bits)
           "-", // pipe
           // end on silence
-          "silence",
-          "1",
-          "0.1",
-          options.thresholdStart || `${options.threshold}%`,
-          "1",
-          options.silence,
-          options.thresholdEnd || `${options.threshold}%`
-        ];
-        break;
-      case "rec":
-      default:
-        cmd = options.recorder;
-        cmdArgs = [
-          "-q", // show no progress
-          "-r",
-          options.sampleRate, // sample rate
-          "-c",
-          options.channels, // channels
-          "-e",
-          "signed-integer", // sample encoding
-          "-b",
-          "16", // precision (bits)
-          "-t",
-          "wav", // audio type
-          "-", // pipe
-          //end on silence
           "silence",
           "1",
           "0.1",
@@ -131,12 +108,38 @@ class LPCM16 {
           cmdArgs.unshift("--device", options.device);
         }
         break;
+      case "rec":
+      default:
+        cmd = options.recorder;
+        cmdArgs = [
+          "-q", // show no progress
+          "-r",
+          options.sampleRate, // sample rate
+          "-c",
+          options.channels, // channels
+          "-e",
+          "signed-integer", // sample encoding
+          "-b",
+          "16", // precision (bits)
+          "-t",
+          "wav", // audio type
+          "-", // pipe
+          //end on silence
+          "silence",
+          "1",
+          "0.1",
+          options.thresholdStart || `${options.threshold}%`,
+          "1",
+          options.silence,
+          options.thresholdEnd || `${options.threshold}%`
+        ];
+        break;
     }
 
     // Spawn audio capture command
     cmdOptions = { encoding: "binary", shell: true };
     if (options.device) {
-      cmdOptions.env = { ...process.env, AUDIODEV: options.device };
+      cmdOptions.env = Object.assign({}, process.env, { AUDIODEV: options.device });
     }
 
     this.cp = spawn(cmd, cmdArgs, cmdOptions);
@@ -155,25 +158,17 @@ class LPCM16 {
     });
 
     this.stream = this.cp.stdout;
-    log(
-      "Start listening:",
-      options.channels,
-      "channels",
-      "- use:",
-      options.recorder,
-      "- device:",
-      options.device,
-      "- sample rate:",
-      options.sampleRate
-    );
+    log(`Start listening: ${options.channels} channels - use: ${options.recorder} - device: ${options.device} - sample rate: ${options.sampleRate}`);
 
     this.stream.on("data", (data) => {
       if (options.verbose) { log("Listening", data.length, "bytes"); }
       counter += data.length;
       if (counter > 1000000000) {
 
-        /** Too long waiting (eq env 8hours) **/
-        /** After ~1Gb of data received -> send a signal 255 for restarting **/
+        /*
+         * Too long waiting (eq env 8hours)
+         * After ~1Gb of data received -> send a signal 255 for restarting
+         */
         this.afterCallback(null, 255);
       }
     });
