@@ -20,8 +20,7 @@
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json build bin components/lib/node/binding/ components/lib/node/index.js *.*.*",
     "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
-    "test": "npm run lint"
+    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix"
   },
   "keywords": [
     "magic mirror",
@@ -60,7 +59,6 @@
     "@eslint/js": "latest",
     "@stylistic/eslint-plugin": "latest",
     "eslint": "^8.56.0",
-    "eslint-plugin-import": "latest",
-    "prettier": "^3.1.1"
+    "eslint-plugin-import": "latest"
   }
 }
