@@ -21,7 +21,7 @@ PLATFORM_RECORDER_MAP.set("mac", "sox");
 PLATFORM_RECORDER_MAP.set("raspberry-pi", "arecord");
 PLATFORM_RECORDER_MAP.set("windows", "sox");
 
-const Recorder = require("../components/lpcm16.js");
+const Recorder = require("./lpcm16.js");
 
 let log = (...args) => { /* do nothing */ };
 

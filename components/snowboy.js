@@ -10,9 +10,9 @@
 "use strict";
 const path = require("path");
 const fs = require("fs");
-const Detector = require("../components/lib/node/index.js").Detector;
-const Models = require("../components/lib/node/index.js").Models;
-const Recorder = require("../components/lpcm16.js");
+const Detector = require("./lib/node/index.js").Detector;
+const Models = require("./lib/node/index.js").Models;
+const Recorder = require("./lpcm16.js");
 
 const snowboyDict = {
   smart_mirror: {
@@ -224,6 +224,6 @@ class Snowboy {
   }
 }
 
-module.exports = require("../components/lib/node/index.js");
+module.exports = require("./lib/node/index.js");
 
 module.exports.Snowboy = Snowboy;
