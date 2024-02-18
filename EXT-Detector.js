@@ -1,9 +1,13 @@
-/*!***********************************************
-* Module : EXT-Detector v2
-* Snowboy and Porcupine keywords listener for GA
-* @bugsounet
-* 2024-02-08
-*************************************************/
+/*
+ ************************************************
+ * Module : EXT-Detector v2
+ * Snowboy and Porcupine keywords listener for GA
+ * @bugsounet
+ * 2024-02-08
+ ************************************************
+ */
+
+/* global DetectorVisual */
 
 Module.register("EXT-Detector", {
   requiresVersion: "2.25.0",
@@ -36,88 +40,89 @@ Module.register("EXT-Detector", {
     ]
   },
 
-  start: function() {
-    this.ready = false
-    this.config.mic= {
+  start () {
+    this.ready = false;
+    this.config.mic = {
       recorder: "auto",
       device: "default"
-    }
-    this.config.snowboyMicConfig= configMerge({}, this.config.mic, this.config.snowboyMicConfig)
-    if (this.config.touchOnly) this.config.useIcon = true
+    };
+    this.config.snowboyMicConfig = configMerge({}, this.config.mic, this.config.snowboyMicConfig);
+    if (this.config.touchOnly) { this.config.useIcon = true; }
 
-    let Tools = {
+    const Tools = {
       file: (...args) => this.file(...args),
       sendSocketNotification: (...args) => this.sendSocketNotification(...args),
       sendNotification: (...args) => this.sendNotification(...args)
-    }
-    this.visual = new DetectorVisual(this.config.useIcon,Tools)
+    };
+    this.visual = new DetectorVisual(this.config.useIcon, Tools);
   },
 
-  notificationReceived: function(notification, payload, sender) {
+  notificationReceived (notification, payload, sender) {
     switch (notification) {
       case "EXT_DETECTOR-START":
-        if (this.ready) this.sendSocketNotification("START")
-        break
+        if (this.ready) { this.sendSocketNotification("START"); }
+        break;
       case "EXT_DETECTOR-STOP":
-        if (this.ready) this.sendSocketNotification("STOP")
-        break
+        if (this.ready) { this.sendSocketNotification("STOP"); }
+        break;
       case "GA_READY":
-        if (sender.name == "MMM-GoogleAssistant") this.sendSocketNotification("INIT", this.config)
-        break
+        if (sender.name === "MMM-GoogleAssistant") { this.sendSocketNotification("INIT", this.config); }
+        break;
     }
   },
 
-  socketNotificationReceived: function(notification, payload) {
+  socketNotificationReceived (notification, payload) {
     switch (notification) {
       case "INITIALIZED":
-        this.sendNotification("EXT_HELLO", this.name)
-        this.ready = true
-        break
+        this.sendNotification("EXT_HELLO", this.name);
+        this.ready = true;
+        break;
       case "NOT_INITIALIZED":
         this.sendNotification("EXT_ALERT", {
           message: "Error: No detectors found, please review your configuration",
           type: "error"
-        })
-        break
+        });
+        break;
       case "WARNING":
       case "ERROR":
         this.sendNotification("EXT_ALERT", {
           message: `Error when loading ${payload.library} library. Try: 'npm run rebuild' in EXT-Detector directory`,
           type: "error"
-        })
-        break
+        });
+        break;
       case "ACCESSKEY":
         this.sendNotification("EXT_ALERT", {
           message: "Error: No porcupineAccessKey provided in config",
           type: "error"
-        })
-        break
+        });
+        break;
       case "PORCUPINENOTINIT":
         this.sendNotification("EXT_ALERT", {
           message: "Error: Can't start Porcupine detector",
           type: "error"
-        })
+        });
+        break;
       case "LISTENING":
-        this.visual.DetectorRefreshLogo(false)
-        break
+        this.visual.DetectorRefreshLogo(false);
+        break;
       case "DETECTED":
-        this.visual.DetectorActivateWord()
-        break
+        this.visual.DetectorActivateWord();
+        break;
       case "DISABLED":
-        this.visual.DetectorDisabled()
-        break
+        this.visual.DetectorDisabled();
+        break;
     }
   },
 
-  getStyles: function(){
-    return [ this.file("EXT-Detector.css") ]
+  getStyles () {
+    return [this.file("EXT-Detector.css")];
   },
 
-  getScripts: function() {
-    return [ "/modules/EXT-Detector/components/visual.js" ]
+  getScripts () {
+    return ["/modules/EXT-Detector/components/visual.js"];
   },
 
-  getDom: function() {
-    return this.visual.DetectorDom()
+  getDom () {
+    return this.visual.DetectorDom();
   }
-})
+});

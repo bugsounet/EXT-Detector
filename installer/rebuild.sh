@@ -34,7 +34,7 @@ Installer_yesno "Do you want to continue ?" || exit 0
 
 echo
 Installer_info "Cleaning..."
-rm -rf node_modules build bin lib components/lib/node/binding/ *.*.* components/lib/node/index.js
+rm -rf node_modules build components/lib/node/binding/ components/lib/node/index.js
 Installer_success "Done."
 echo
 
