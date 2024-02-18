@@ -9,7 +9,15 @@ const config = [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        config: true,
+        Log: true,
+        MM: true,
+        Module: true,
+        moment: true,
+        document: true,
+        windows: true,
+        configMerge: true
       }
     },
     plugins: {
@@ -80,6 +88,7 @@ const config = [
       "prefer-destructuring": "off",
       "sort-keys": "off",
       strict: "off",
+      "new-cap": "off",
       "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }]
     }
   }
