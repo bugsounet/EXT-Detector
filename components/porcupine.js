@@ -13,7 +13,7 @@ const { Porcupine } = require("@picovoice/porcupine-node");
 const { getPlatform } = require("@picovoice/porcupine-node/dist/platforms");
 const { BuiltinKeyword, getBuiltinKeywordPath } = require("@picovoice/porcupine-node/dist/builtin_keywords");
 
-const keywordStringMap = new Map(Array.from(new Map(Object.entries(BuiltinKeyword)), (a) => a.reverse()));
+const keywordStringMap = new Map(Array.from(new Map(Object.entries(BuiltinKeyword)), (keywords) => keywords.reverse()));
 
 const PLATFORM_RECORDER_MAP = new Map();
 PLATFORM_RECORDER_MAP.set("linux", "arecord");
@@ -32,7 +32,9 @@ class PORCUPINE {
     this.callback = callback;
     this.debug = debug;
     this.initialized = false;
-    if (!this.debug) { log = function () { /* do nothing */ }; }
+    if (this.debug) {
+      log = (...args) => { console.log("[DETECTOR] [PORCUPINE]", ...args); };
+    }
     if (this.config.dev) { log("DetectorConfig:", this.config); }
 
     this.defaultMicOption = {
@@ -53,9 +55,13 @@ class PORCUPINE {
       platform = getPlatform();
     } catch (error) {
       console.error("[DETECTOR] [PORCUPINE] The NodeJS binding does not support this platform. Supported platforms include macOS (x86_64), Windows (x86_64), Linux (x86_64), and Raspberry Pi (1-4)");
-      return console.error(error);
+      console.error(error);
+      return;
     }
-    if (!this.config.accessKey) { return console.error("[DETECTOR] [PORCUPINE] Error: No AccessKey provided in config!"); }
+    if (!this.config.accessKey) {
+      console.error("[DETECTOR] [PORCUPINE] Error: No AccessKey provided in config!");
+      return;
+    }
 
     if (this.micConfig.recorder === "auto") {
       const recorderType = PLATFORM_RECORDER_MAP.get(platform);
@@ -74,8 +80,6 @@ class PORCUPINE {
   init () {
     if (!this.initialized) { return console.error("[DETECTOR] [PORCUPINE] Can't init Porcupine! (missing accessKey)"); }
     let keywordPaths = [];
-    const libraryFilePath = undefined;
-    const modelFilePath = undefined;
     const sensitivities = [];
 
     /* build keyword list */
@@ -99,7 +103,7 @@ class PORCUPINE {
       else { sensitivities.push(detector.Sensitivity); }
     });
 
-    const keywordPathsDefined = keywordPaths !== undefined;
+    const keywordPathsDefined = typeof keywordPaths !== "undefined";
 
     if (!Array.isArray(keywordPaths)) {
       keywordPaths = keywordPaths.split(",");
@@ -109,18 +113,20 @@ class PORCUPINE {
       if (keywordPathsDefined && keywordStringMap.has(keywordPath)) {
         console.warn(`[PORCUPINE] --keyword_path argument '${keywordPath}' matches a built-in keyword. Did you mean to use --keywords ?`);
       }
+      /* eslint-disable require-unicode-regexp, no-useless-escape */
       const keywordName = keywordPath
         .split(/[\\|\/]/)
         .pop()
         .split("_")[0];
+      /* eslint-enable require-unicode-regexp, no-useless-escape */
       this.keywordNames.push(keywordName);
     }
     if (!keywordPaths.length) { return console.error("[DETECTOR] [PORCUPINE] No keyword found!"); }
     try {
-      this.porcupine = new Porcupine(this.config.accessKey, keywordPaths, sensitivities, modelFilePath, libraryFilePath);
+      this.porcupine = new Porcupine(this.config.accessKey, keywordPaths, sensitivities);
       log(`Ready for listening this wake word(s): ${this.keywordNames}`);
-    } catch (e) {
-      console.error("[PORCUPINE] Error:", e.message);
+    } catch (err) {
+      console.error("[PORCUPINE] Error:", err.message);
       this.initialized = false;
     }
   }
@@ -148,17 +154,19 @@ class PORCUPINE {
     this.infoStream.on("data", (data) => {
       //log("Received datas: " + data.length)
       const newFrames16 = new Array(data.length / 2);
+      /* eslint-disable id-length */
       for (let i = 0; i < data.length; i += 2) {
         newFrames16[i / 2] = data.readInt16LE(i);
       }
+      /* eslint-enable id-length */
 
       frameAccumulator = frameAccumulator.concat(newFrames16);
       const frames = this.chunkArray(frameAccumulator, frameLength);
 
-      if (frames[frames.length - 1].length !== frameLength) {
-        frameAccumulator = frames.pop();
-      } else {
+      if (frames[frames.length - 1].length === frameLength) {
         frameAccumulator = [];
+      } else {
+        frameAccumulator = frames.pop();
       }
 
       for (const frame of frames) {
@@ -217,9 +225,11 @@ class PORCUPINE {
   }
 
   /** Tools **/
+  /* eslint-disable class-methods-use-this, id-length */
   chunkArray (array, size) {
     return Array.from({ length: Math.ceil(array.length / size) }, (v, index) => array.slice(index * size, index * size + size));
   }
+  /* eslint-enable class-methods-use-this, id-length */
 }
 
 module.exports = PORCUPINE;
