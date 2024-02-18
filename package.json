@@ -18,7 +18,7 @@
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
-    "clean": "rm -rf node_modules package-lock.json build bin components/lib/node/binding/ components/lib/node/index.js *.*.*",
+    "clean": "rm -rf node_modules package-lock.json build components/lib/node/binding/ components/lib/node/index.js",
     "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
     "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix"
   },
