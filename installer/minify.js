@@ -1,5 +1,7 @@
-/** Code minifier **/
-/** @busgounet **/
+/*
+ * Code minifier
+ * @busgounet
+ */
 
 const path = require("path");
 const { globSync } = require("glob");
@@ -11,21 +13,30 @@ let files = [
   "../components/lib/node/index.js"
 ];
 
+const project = require("../package.json").name;
+const revision = require("../package.json").rev;
+const version = require("../package.json").version;
+
+const commentIn = "/**";
+const commentOut = "**/";
+
+/**
+ * search all javascript files
+ */
 function searchFiles () {
   const components = globSync("../components/*.js");
   files = files.concat(components);
   console.log(`Found: ${files.length} files to minify\n`);
 }
 
-// minify files array
-async function minifyFiles () {
-  searchFiles();
-  await Promise.all(files.map((file) => minify(file))).catch(() => process.exit(255));
-}
-
+/**
+ * Minify filename with esbuild
+ * @param {string} file to minify
+ * @returns {boolean} resolved with true
+ */
 function minify (file) {
   const pathResolve = path.resolve(__dirname, file);
-  const error = 0;
+  const FileName = path.parse(file).base;
   console.log("Process File:", file);
   return new Promise((resolve, reject) => {
     try {
@@ -33,13 +44,27 @@ function minify (file) {
         entryPoints: [pathResolve],
         allowOverwrite: true,
         minify: true,
-        outfile: pathResolve
+        outfile: pathResolve,
+        banner: {
+          js: `${commentIn} ${project}\n  * File: ${FileName}\n  * Version: ${version}\n  * Revision: ${revision}\n${commentOut}`
+        },
+        footer: {
+          js: `${commentIn} Coded With Heart by bugsounet ${commentOut}`
+        }
       });
       resolve(true);
-    } catch (e) {
-      reject();
+    } catch (err) {
+      reject(err);
     }
   });
+}
+
+/**
+ * Minify all files in array with Promise
+ */
+async function minifyFiles () {
+  searchFiles();
+  await Promise.all(files.map((file) => minify(file))).catch(() => process.exit(255));
 }
 
 minifyFiles();

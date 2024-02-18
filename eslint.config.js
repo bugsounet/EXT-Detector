@@ -89,6 +89,10 @@ const config = [
       "sort-keys": "off",
       strict: "off",
       "new-cap": "off",
+      camelcase: ["error", { properties: "never" }],
+      "max-params": "off",
+      "no-empty-function": "warn",
+      "max-depth": "warn",
       "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }]
     }
   }
