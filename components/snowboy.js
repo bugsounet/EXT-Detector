@@ -57,7 +57,7 @@ const snowboyDict = {
   }
 };
 
-let log = (...args) => { /* do nothing */ };
+let log = () => { /* do nothing */ };
 
 class Snowboy {
   constructor (config, mic, callback = () => {}, debug) {
@@ -69,7 +69,9 @@ class Snowboy {
     this.mic = null;
     this.detector = null;
     this.debug = debug;
-    if (!this.debug) { log = function () { /* do nothing */ }; }
+    if (this.debug) {
+      log = (...args) => { console.log("[DETECTOR] [SNOWBOY]", ...args); };
+    }
     this.defaultConfig = {
       usePMDL: false,
       Model: "jarvis",
@@ -89,7 +91,7 @@ class Snowboy {
       verbose: false,
       debug: this.debug
     };
-    this.recorderOptions = { ...this.defaultMicOption, ...this.micConfig };
+    this.recorderOptions = Object.assign({}, this.defaultMicOption, this.micConfig);
   }
 
   init () {
@@ -97,7 +99,9 @@ class Snowboy {
     this.models = new Models();
     log("Checking models");
     this.config.forEach((config, nb) => {
+      /* eslint-disable no-param-reassign */
       config = Object.assign(this.defaultConfig, config);
+      /* eslint-enable no-param-reassign */
       let found = 0;
       if (!config.usePMDL) {
         if (config.Model) {
@@ -107,7 +111,7 @@ class Snowboy {
               if (config.Sensitivity) {
                 if ((isNaN(config.Sensitivity)) || (Math.ceil(config.Sensitivity) > 1)) {
                   console.error("[DETECTOR] [SNOWBOY] Wrong Sensitivity value in", config.Model);
-                } else if (item === ("jarvis" || "neo_ya")) {
+                } else if (item === "jarvis" || item === "neo_ya") {
                   value.sensitivity = `${config.Sensitivity},${config.Sensitivity}`;
                 }
                 else { value.sensitivity = config.Sensitivity; }
