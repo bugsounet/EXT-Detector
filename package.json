@@ -58,9 +58,9 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@eslint/js": "latest",
-    "@stylistic/eslint-plugin": "latest",
+    "@eslint/js": "^8.57.0",
+    "@stylistic/eslint-plugin": "^1.6.2",
     "eslint": "^8.57.0",
-    "eslint-plugin-import": "latest"
+    "eslint-plugin-import": "^2.29.1"
   }
 }
