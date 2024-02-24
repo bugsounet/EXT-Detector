@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.5.0",
-  "rev": "240218",
+  "version": "2.5.1",
+  "rev": "240224",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
   "typings": "components/lib/node/index.d.ts",
@@ -20,7 +20,9 @@
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json build components/lib/node/binding/ components/lib/node/index.js",
     "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix"
+    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
+    "test": "npm run lint",
+    "test:minify": "cd installer && node minify.js"
   },
   "keywords": [
     "magic mirror",
@@ -49,16 +51,16 @@
     "@electron/rebuild": "^3.6.0",
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@picovoice/porcupine-node": "^3.0.2",
-    "@types/node": "^20.11.19",
-    "esbuild": "^0.20.0",
+    "@types/node": "^20.11.20",
+    "esbuild": "^0.20.1",
     "glob": "^10.3.10",
     "nan": "^2.18.0",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@eslint/js": "latest",
-    "@stylistic/eslint-plugin": "latest",
-    "eslint": "^8.56.0",
-    "eslint-plugin-import": "latest"
+    "@eslint/js": "^8.57.0",
+    "@stylistic/eslint-plugin": "^1.6.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1"
   }
 }
