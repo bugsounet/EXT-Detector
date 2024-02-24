@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.5.0",
-  "rev": "240218",
+  "version": "2.5.1",
+  "rev": "240224",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
   "typings": "components/lib/node/index.d.ts",
