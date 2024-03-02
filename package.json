@@ -25,6 +25,7 @@
     "test:minify": "cd installer && node minify.js"
   },
   "keywords": [
+    "MMM-GoogleAssistant",
     "magic mirror",
     "module",
     "hotword",
