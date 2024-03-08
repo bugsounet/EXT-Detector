@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.5.1",
-  "rev": "240224",
+  "version": "2.5.2",
+  "rev": "240303",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
   "typings": "components/lib/node/index.d.ts",
@@ -25,6 +25,7 @@
     "test:minify": "cd installer && node minify.js"
   },
   "keywords": [
+    "MMM-GoogleAssistant",
     "magic mirror",
     "module",
     "hotword",
@@ -51,7 +52,7 @@
     "@electron/rebuild": "^3.6.0",
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@picovoice/porcupine-node": "^3.0.2",
-    "@types/node": "^20.11.20",
+    "@types/node": "^20.11.24",
     "esbuild": "^0.20.1",
     "glob": "^10.3.10",
     "nan": "^2.18.0",
@@ -59,7 +60,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
-    "@stylistic/eslint-plugin": "^1.6.2",
+    "@stylistic/eslint-plugin": "^1.6.3",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1"
   }
