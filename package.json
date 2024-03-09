@@ -52,7 +52,7 @@
     "@electron/rebuild": "^3.6.0",
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@picovoice/porcupine-node": "^3.0.2",
-    "@types/node": "^20.11.24",
+    "@types/node": "^20.11.25",
     "esbuild": "^0.20.1",
     "glob": "^10.3.10",
     "nan": "^2.19.0",
