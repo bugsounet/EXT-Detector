@@ -14,7 +14,6 @@ Module.register("EXT-Detector", {
   defaults: {
     debug: false,
     useIcon: true,
-    touchOnly: false,
     porcupineAccessKey: null,
     porcupineCustomModel: null,
     snowboyMicConfig: {
@@ -47,7 +46,6 @@ Module.register("EXT-Detector", {
       device: "default"
     };
     this.config.snowboyMicConfig = configMerge({}, this.config.mic, this.config.snowboyMicConfig);
-    if (this.config.touchOnly) { this.config.useIcon = true; }
 
     const Tools = {
       file: (...args) => this.file(...args),

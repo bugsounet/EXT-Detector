@@ -25,17 +25,6 @@ class DetectorVisual {
     icon.classList.remove("flash");
   }
 
-  DetectorClickCheck () {
-    if (!this.listening) { return; }
-    this.DetectorClickActivate();
-  }
-
-  DetectorClickActivate () {
-    this.sendSocketNotification("STOP", false); // stop and don't send DISABLED callback
-    this.listening = false;
-    this.DetectorActivateWord();
-  }
-
   DetectorActivateWord () {
     this.DetectorRefreshLogo(true);
     this.sendNotification("GA_ACTIVATE");
@@ -63,10 +52,6 @@ class DetectorVisual {
       icon.id = "EXT_DETECTOR-ICON";
       icon.style.backgroundImage = `url(${this.logoGoogle})`;
       icon.classList.add("busy");
-      icon.onclick = (event) => {
-        event.stopPropagation();
-        this.DetectorClickCheck();
-      };
       wrapper.appendChild(icon);
     }
     else { wrapper.className = "hidden"; }
