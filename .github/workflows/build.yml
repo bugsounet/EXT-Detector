@@ -1,0 +1,26 @@
+name: "MagicMirror² (master) and EXT-Detector build Testing"
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Test install EXT-Detector
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout MagicMirror²
+        uses: actions/checkout@v4
+        with:
+          repository: MagicMirrorOrg/MagicMirror
+
+      - name: Install MagicMirror²
+        run: npm install
+
+      - name: Checkout EXT-Detector
+        uses: actions/checkout@v4
+        with:
+          path: MagicMirror/modules/EXT-Detector
+
+      - name: Install MMM-GoogleAssistant
+        run: npm install
+        working-directory: MagicMirror/modules/EXT-Detector
+        continue-on-error: false
