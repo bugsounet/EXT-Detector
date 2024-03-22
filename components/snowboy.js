@@ -128,7 +128,7 @@ class Snowboy {
           this.models.add(this.model[nb]);
         });
       } else if (config.Model && config.usePMDL) {
-        const PMDLPath = path.resolve(__dirname, "../resources"); // personal PMDL are inside resources directory
+        const PMDLPath = path.resolve(__dirname, "../custom"); // personal PMDL are inside resources directory
         if (!fs.existsSync(`${PMDLPath}/${config.Model}.pmdl`)) {
           return console.error(`[DETECTOR] [SNOWBOY] ${PMDLPath}/${config.Model}.pmdl file not found !`);
         } log(`Personal Model selected: ${config.Model}.pmdl`);
