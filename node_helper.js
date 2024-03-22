@@ -65,7 +65,7 @@ module.exports = NodeHelper.create({
 
       /* Porcupine init */
       this.porcupineConfig.accessKey = this.config.porcupineAccessKey || null;
-      this.porcupineConfig.customModel = this.config.porcupineCustomModel ? `${__dirname}/${this.config.porcupineCustomModel}` : null;
+      this.porcupineConfig.customModel = this.config.porcupineCustomModel ? `${__dirname}/custom/${this.config.porcupineCustomModel}` : null;
       this.porcupineConfig.detectors = [];
 
       if (!this.porcupineConfig.accessKey) {
