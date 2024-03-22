@@ -52,11 +52,6 @@ module.exports = NodeHelper.create({
       console.error("[DETECTOR] [DATA] Try to solve it with: npm run rebuild");
       return;
     }
-    if (this.config.touchOnly) {
-      console.log("[DETECTOR] [DATA] Ready with Touch Screen Feature only");
-      this.sendSocketNotification("INITIALIZED");
-      return;
-    }
 
     this.config.mic.recorder = "arecord";
     this.config.snowboyMicConfig.recorder = "arecord";
@@ -158,7 +153,6 @@ module.exports = NodeHelper.create({
 
   /** [RULES] **/
   activate () {
-    if (this.config.touchOnly) { return this.sendSocketNotification("LISTENING"); }
     if (this.porcupine && this.porcupine.initialized && (this.porcupine.keywordNames.length || this.porcupineCanRestart)) {
       this.porcupine.start();
       this.porcupineCanRestart = true;
@@ -186,7 +180,6 @@ module.exports = NodeHelper.create({
   },
 
   deactivate (withNoti = true) {
-    if (this.config.touchOnly) { return; }
     if (this.porcupine) {
       this.porcupine.stop();
       this.detector = false;
