@@ -1,6 +1,5 @@
 #EXT_DETECTOR {
-  display: flex;
-  margin-left: 10px;
+  display: inline-flex;
   align-items: center;
 }
 
@@ -9,11 +8,10 @@
 }
 
 #EXT_DETECTOR-ICON {
-    background-size: 100%;
-    width: 50px;
-    height: 52px;
-    background-repeat: no-repeat;
-    margin-right: 10px;
+  background-size: 100%;
+  width: 50px;
+  height: 52px;
+  background-repeat: no-repeat;
 }
 
 #EXT_DETECTOR-ICON.busy {
