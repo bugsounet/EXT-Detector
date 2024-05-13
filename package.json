@@ -54,7 +54,7 @@
     "@picovoice/porcupine-node": "^3.0.2",
     "@types/node": "^20.12.9",
     "esbuild": "^0.20.2",
-    "glob": "^10.3.12",
+    "glob": "^10.3.15",
     "nan": "^2.19.0",
     "typescript": "^5.4.5"
   },
