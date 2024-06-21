@@ -65,7 +65,7 @@ export class HotwordModels implements HotwordModels {
 
     const type = path.extname(model.file).toUpperCase();
 
-    if (ModelType[type] === ModelType.PMDL && model.hotwords.length > 1) {
+    if (ModelType[type as keyof typeof ModelType] === ModelType.PMDL && model.hotwords.length > 1) {
       throw new Error('Personal models can define only one hotword.');
     }
 
