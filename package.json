@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.6.2",
-  "rev": "240528",
+  "version": "2.7.0",
+  "rev": "240701",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
   "typings": "components/lib/node/index.d.ts",
@@ -37,7 +37,7 @@
     "ok google"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "author": "bugsounet",
   "license": "MIT",
@@ -46,7 +46,7 @@
     "url": "https://github.com/bugsounet/EXT-Detector"
   },
   "bugs": {
-    "url": "https://forum.bugsounet.fr"
+    "url": "https://github.com/bugsounet/EXT-Detector/issues"
   },
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
