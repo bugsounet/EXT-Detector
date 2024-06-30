@@ -14,7 +14,7 @@
   },
   "scripts": {
     "preinstall": "installer/preinstall.sh -d 'libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential'",
-    "postinstall": "installer/postinstall.sh -r -m -b",
+    "postinstall": "installer/postinstall.sh -r -m",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
