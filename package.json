@@ -1,7 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.6.1",
-  "rev": "240420",
+  "version": "2.7.0",
+  "rev": "240701",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
   "main": "EXT-Detector.js",
   "typings": "components/lib/node/index.d.ts",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "preinstall": "installer/preinstall.sh -d 'libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential'",
-    "postinstall": "installer/postinstall.sh -r -m -b",
+    "postinstall": "installer/postinstall.sh -r -m",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
@@ -37,7 +37,7 @@
     "ok google"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "author": "bugsounet",
   "license": "MIT",
@@ -46,21 +46,21 @@
     "url": "https://github.com/bugsounet/EXT-Detector"
   },
   "bugs": {
-    "url": "https://forum.bugsounet.fr"
+    "url": "https://github.com/bugsounet/EXT-Detector/issues"
   },
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@picovoice/porcupine-node": "^3.0.2",
-    "@types/node": "^20.12.7",
-    "esbuild": "^0.20.2",
-    "glob": "^10.3.12",
-    "nan": "^2.19.0",
-    "typescript": "^5.4.5"
+    "@types/node": "^20.14.9",
+    "esbuild": "^0.22.0",
+    "glob": "^10.4.2",
+    "nan": "^2.20.0",
+    "typescript": "^5.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
-    "@stylistic/eslint-plugin": "^1.7.0",
+    "@stylistic/eslint-plugin": "^1.8.1",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1"
   }
