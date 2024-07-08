@@ -51,7 +51,7 @@
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
     "@mapbox/node-pre-gyp": "^1.0.11",
-    "@picovoice/porcupine-node": "^3.0.2",
+    "@picovoice/porcupine-node": "^3.0.3",
     "@types/node": "^20.14.10",
     "esbuild": "^0.23.0",
     "glob": "^10.4.3",
