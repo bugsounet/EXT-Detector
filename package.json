@@ -49,7 +49,7 @@
     "url": "https://github.com/bugsounet/EXT-Detector/issues"
   },
   "dependencies": {
-    "@electron/rebuild": "^3.6.0",
+    "@electron/rebuild": "^3.6.2",
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@picovoice/porcupine-node": "^3.0.4",
     "@types/node": "^22.7.4",
