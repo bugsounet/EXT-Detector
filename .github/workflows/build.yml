@@ -29,7 +29,7 @@ jobs:
         with:
           path: MagicMirror/modules/EXT-Detector
 
-      - name: Install MMM-GoogleAssistant
+      - name: Install EXT-Detector
         run: npm install
         working-directory: MagicMirror/modules/EXT-Detector
         continue-on-error: false
