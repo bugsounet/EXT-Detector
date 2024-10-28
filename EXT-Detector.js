@@ -76,26 +76,26 @@ Module.register("EXT-Detector", {
         this.ready = true;
         break;
       case "NOT_INITIALIZED":
-        this.sendNotification("EXT_ALERT", {
+        this.sendNotification("GA_ALERT", {
           message: "Error: No detectors found, please review your configuration",
           type: "error"
         });
         break;
       case "WARNING":
       case "ERROR":
-        this.sendNotification("EXT_ALERT", {
+        this.sendNotification("GA_ALERT", {
           message: `Error when loading ${payload.library} library. Try: 'npm run rebuild' in EXT-Detector directory`,
           type: "error"
         });
         break;
       case "ACCESSKEY":
-        this.sendNotification("EXT_ALERT", {
+        this.sendNotification("GA_ALERT", {
           message: "Error: No porcupineAccessKey provided in config",
           type: "error"
         });
         break;
       case "PORCUPINENOTINIT":
-        this.sendNotification("EXT_ALERT", {
+        this.sendNotification("GA_ALERT", {
           message: "Error: Can't start Porcupine detector",
           type: "error"
         });
