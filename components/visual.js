@@ -6,6 +6,7 @@
  **********************************
  */
 
+/* eslint-disable-next-line */
 class DetectorVisual {
   constructor (useIcon, Tools) {
     this.useIcon = useIcon;

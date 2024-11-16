@@ -5,7 +5,7 @@
  */
 
 "use strict";
-let log = (...args) => { /* do nothing */ };
+let log = () => { /* do nothing */ };
 const NodeHelper = require("node_helper");
 
 module.exports = NodeHelper.create({

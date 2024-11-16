@@ -4,8 +4,6 @@
 
 "use strict";
 
-/* eslint-disable max-lines-per-function */
-
 const spawn = require("child_process").spawn;
 
 let log = () => { /* do nothing */ };
@@ -152,7 +150,7 @@ class LPCM16 {
       return this.afterCallback(data.toString());
 
     });
-    this.cp.on("exit", (code, signal) => {
+    this.cp.on("exit", (code) => {
       this.stream.destroy();
       this.afterCallback(null, code);
     });

@@ -10,9 +10,9 @@
 "use strict";
 const path = require("path");
 const fs = require("fs");
-const Detector = require("./lib/node/index.js").Detector;
-const Models = require("./lib/node/index.js").Models;
-const Recorder = require("./lpcm16.js");
+const Detector = require("./lib/node/index").Detector;
+const Models = require("./lib/node/index").Models;
+const Recorder = require("./lpcm16");
 
 const snowboyDict = {
   smart_mirror: {
@@ -123,7 +123,7 @@ class Snowboy {
           }
         }
         if (this.model.length === 0 || !found) { return console.error("[DETECTOR] [SNOWBOY] Error: model not found:", config.Model); }
-        this.model.forEach((model) => {
+        this.model.forEach(() => {
           this.model[nb].file = path.resolve(modelPath, `${config.Model}.umdl`);
           this.models.add(this.model[nb]);
         });
@@ -166,11 +166,10 @@ class Snowboy {
         this.error(err);
 
       })
-      .on("hotword", (index, hotword, buffer) => {
+      .on("hotword", (index, hotword) => {
         log("Detected:", hotword);
         this.stopListening();
         this.callback(hotword);
-
       });
 
     this.startListening();
@@ -224,6 +223,6 @@ class Snowboy {
   }
 }
 
-module.exports = require("./lib/node/index.js");
+module.exports = require("./lib/node/index");
 
 module.exports.Snowboy = Snowboy;

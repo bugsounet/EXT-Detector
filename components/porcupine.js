@@ -7,7 +7,6 @@
  */
 
 "use strict";
-const path = require("path");
 const PassThrough = require("stream").PassThrough;
 const { Porcupine } = require("@picovoice/porcupine-node");
 const { getPlatform } = require("@picovoice/porcupine-node/dist/platforms");
@@ -21,9 +20,9 @@ PLATFORM_RECORDER_MAP.set("mac", "sox");
 PLATFORM_RECORDER_MAP.set("raspberry-pi", "arecord");
 PLATFORM_RECORDER_MAP.set("windows", "sox");
 
-const Recorder = require("./lpcm16.js");
+const Recorder = require("./lpcm16");
 
-let log = (...args) => { /* do nothing */ };
+let log = () => { /* do nothing */ };
 
 class PORCUPINE {
   constructor (config, mic, callback = () => {}, debug) {
@@ -113,12 +112,12 @@ class PORCUPINE {
       if (keywordPathsDefined && keywordStringMap.has(keywordPath)) {
         console.warn(`[PORCUPINE] --keyword_path argument '${keywordPath}' matches a built-in keyword. Did you mean to use --keywords ?`);
       }
-      /* eslint-disable require-unicode-regexp, no-useless-escape */
+      /* eslint-disable no-useless-escape */
       const keywordName = keywordPath
         .split(/[\\|\/]/)
         .pop()
         .split("_")[0];
-      /* eslint-enable require-unicode-regexp, no-useless-escape */
+      /* eslint-enable no-useless-escape */
       this.keywordNames.push(keywordName);
     }
     if (!keywordPaths.length) { return console.error("[DETECTOR] [PORCUPINE] No keyword found!"); }
@@ -149,16 +148,13 @@ class PORCUPINE {
     if (!this.mic) { return console.log("[DETECTOR] [PORCUPINE] Mic not activated!"); }
     if (!this.porcupine) { return console.error("[DETECTOR] [PORCUPINE] Porpucine is not initialized !"); }
     const frameLength = this.porcupine.frameLength;
-    const sampleRate = this.porcupine.sampleRate;
     let frameAccumulator = [];
     this.infoStream.on("data", (data) => {
       //log("Received datas: " + data.length)
       const newFrames16 = new Array(data.length / 2);
-      /* eslint-disable id-length */
       for (let i = 0; i < data.length; i += 2) {
         newFrames16[i / 2] = data.readInt16LE(i);
       }
-      /* eslint-enable id-length */
 
       frameAccumulator = frameAccumulator.concat(newFrames16);
       const frames = this.chunkArray(frameAccumulator, frameLength);
@@ -225,11 +221,9 @@ class PORCUPINE {
   }
 
   /** Tools **/
-  /* eslint-disable class-methods-use-this, id-length */
   chunkArray (array, size) {
     return Array.from({ length: Math.ceil(array.length / size) }, (v, index) => array.slice(index * size, index * size + size));
   }
-  /* eslint-enable class-methods-use-this, id-length */
 }
 
 module.exports = PORCUPINE;
