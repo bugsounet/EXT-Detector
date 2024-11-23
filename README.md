@@ -16,4 +16,4 @@ It will include:
   * Computer
   * ...
 
-All informations is now the [wiki](http://wiki.bugsounet.fr/en/EXT-Detector)
+All informations, install and updates is now the [wiki](http://wiki.bugsounet.fr/en/EXT-Detector)
