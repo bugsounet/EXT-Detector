@@ -34,7 +34,10 @@ source utils.sh
 echo
 
 Installer_info "Prepare snowboy library..."
-tsc -p ../tsconfig.json || {
+{
+  tsc -p ../tsconfig.json
+  esbuild ../components/lib/node/index.js --minify --outfile=../components/lib/node/index.js --banner:js="/** ⚠ This file must not be modified ⚠ **/" --allow-overwrite
+} || {
   Installer_error "Failed!"
   exit 255
 }
@@ -45,6 +48,14 @@ if [[ $minify == 1 ]]; then
   Installer_info "Minify Main code..."
   node minify.js || {
     Installer_error "Minify Failed!"
+    exit 255
+  }
+  Installer_success "Done"
+  echo
+else
+  Installer_info "Install developer Main code..."
+  node dev.js || {
+    Installer_error "Install Failed!"
     exit 255
   }
   Installer_success "Done"

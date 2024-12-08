@@ -1,29 +1,7 @@
 {
   "name": "EXT-Detector",
-  "version": "2.8.2",
-  "rev": "241123",
+  "version": "2.9.0",
   "description": "Snowboy / Porcupine Simple detector for MMM-GoogleAssistant",
-  "main": "EXT-Detector.js",
-  "typings": "components/lib/node/index.d.ts",
-  "binary": {
-    "module_name": "snowboy",
-    "module_path": "./components/lib/node/binding/{configuration}/{node_abi}-{platform}-{arch}/",
-    "remote_path": "./{module_name}/v{version}/{configuration}/",
-    "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
-    "host": "https://github.com/bugsounet/snowboy"
-  },
-  "scripts": {
-    "preinstall": "installer/preinstall.sh -d 'libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential'",
-    "postinstall": "installer/postinstall.sh -r -m",
-    "update": "installer/update.sh",
-    "rebuild": "installer/rebuild.sh",
-    "reset": "git reset --hard",
-    "clean": "rm -rf node_modules package-lock.json build components/lib/node/binding/ components/lib/node/index.js",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
-    "test": "npm run lint",
-    "test:minify": "cd installer && node minify.js"
-  },
   "keywords": [
     "MMM-GoogleAssistant",
     "magic mirror",
@@ -36,23 +14,43 @@
     "jarvis",
     "ok google"
   ],
-  "engines": {
-    "node": ">=20"
+  "bugs": {
+    "url": "https://github.com/bugsounet/EXT-Detector/issues"
   },
-  "author": "bugsounet",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/bugsounet/EXT-Detector"
   },
-  "bugs": {
-    "url": "https://github.com/bugsounet/EXT-Detector/issues"
+  "license": "MIT",
+  "author": "bugsounet",
+  "main": "EXT-Detector.js",
+  "typings": "components/lib/node/index.d.ts",
+  "binary": {
+    "module_name": "snowboy",
+    "module_path": "./components/lib/node/binding/{configuration}/{node_abi}-{platform}-{arch}/",
+    "remote_path": "./{module_name}/v{version}/{configuration}/",
+    "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
+    "host": "https://github.com/bugsounet/snowboy"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules package-lock.json build components/lib/node/binding/ components/lib/node/index.js",
+    "dev": "cd installer && node dev.js",
+    "dev:src": "cd installer && node src.js",
+    "lint": "eslint . --config eslint.config.mjs",
+    "lint:fix": "eslint . --config eslint.config.mjs --fix",
+    "postinstall": "installer/postinstall.sh -r -m",
+    "preinstall": "installer/preinstall.sh -d 'libmagic-dev libatlas-base-dev sox libsox-fmt-all build-essential'",
+    "rebuild": "installer/rebuild.sh",
+    "reset": "rm -f *.js && rm -f components/*.js && git reset --hard",
+    "test": "npm run lint",
+    "test:minify": "cd installer && node minify.js",
+    "update": "installer/update.sh"
   },
   "dependencies": {
     "@electron/rebuild": "^3.7.1",
     "@mapbox/node-pre-gyp": "^1.0.11",
     "@picovoice/porcupine-node": "^3.0.4",
-    "@types/node": "^22.9.3",
+    "@types/node": "^22.10.1",
     "esbuild": "^0.24.0",
     "glob": "^11.0.0",
     "nan": "^2.22.0",
@@ -60,7 +58,12 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2.11.0",
-    "eslint": "^9.15.0",
-    "eslint-plugin-import": "^2.31.0"
-  }
+    "eslint": "^9.16.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-package-json": "^0.18.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "rev": "241208"
 }

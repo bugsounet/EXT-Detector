@@ -3,3 +3,6 @@
 /bin/
 /components/lib/node/binding/*
 /components/lib/node/index.js
+/EXT-Detector.js
+/node_helper.js
+/components/*.js
